@@ -1,0 +1,194 @@
+\section{The Tooth Lemma and the Pair Lemma}\label{sec:tooth}
+
+The Tooth Lemma is the main new structural result. Its input is a set $Y$, which will be a tooth of a
+comb, together with a set $U$ of outside vertices that see $Y$ only through modules, as the module law
+guarantees. Its output is a long pure or complete blockade inside $Y$, or a large subset $Y'\subseteq Y$
+that each $u\in U$ sees completely or very sparsely.
+
+\begin{lemma}[Tooth Lemma]\label{lem:tooth}
+Let $0<x\le2^{-20}$, let $k$ be an integer with $2^{16}\le k\le2x^{-1/2}$, let $Y$ be a set of $n:=|Y|\ge
+16x^{-3}$ vertices, and let $U$ be a set of vertices such that for every $u\in U$ every anticomponent of
+$N(u)\cap Y$ is a module of $G[Y]$. Then $G[Y]$ contains one of the following:
+\begin{enumerate}[label=(TL\arabic*),leftmargin=3.2em]
+\item a pure $(K,n/K^4)$-blockade, for some integer $K$ with $K^4\ge k$ and $K\le1/x$;
+\item a pure $(L,n/(2k))$-blockade, for an integer $L$ with $(8L)^4\le k^3\le(9L)^4$;
+\item a complete or anticomplete $(\floor{1/x},x^2n/k)$-blockade;
+\item a complete $(\floor{1/(xk)},x^3n/4)$-blockade;
+\item a set $Y'\subseteq Y$ with $|Y'|\ge n/k$ such that for every $u\in U$, either $Y'\subseteq N(u)$ or
+  $|N(u)\cap Y'|<x|Y'|/4$.
+\end{enumerate}
+\end{lemma}
+
+In (TL1) the length is at least $k^{1/4}$, and in (TL2) it lies between $k^{3/4}/9$ and $k^{3/4}/8$.
+Lengths are written without roots because this is how they are stated in Lean.
+
+\begin{proof}
+Note that $k\le2x^{-1/2}$ gives $k^2x\le4$ and $xk\le2x^{1/2}\le2^{-9}$. Set
+\[
+s:=x^2n/4,\qquad t:=n/k,\qquad K_1:=\floor{1/x}.
+\]
+Then $s\ge4/x>1$, and $s\le t$ because $xk\le4$. Let $\cL$ be the set of strong modules of $G[Y]$ with at
+least $s$ vertices. It contains $Y$ and is closed upwards in the tree of strong modules. An \emph{atom} is
+a child of a member of $\cL$ that is not itself in $\cL$, so every atom has fewer than $s$ vertices. For
+$N\in\cL$ let $S(N)$ be the union of the atom children of $N$, the \emph{layer} of $N$. We use three facts.
+
+\begin{enumerate}[label=(F\arabic*),leftmargin=2.5em]
+\item \emph{The layers $S(N)$, $N\in\cL$, partition $Y$.} For $v\in Y$ let $N_v$ be a minimal member of
+  $\cL$ containing $v$. The child of $N_v$ containing $v$ is not in $\cL$, so $v\in S(N_v)$. Suppose $v\in
+  S(N)\cap S(N')$ with $N\neq N'$. By laminarity one of them, say $N'$, is strictly inside the other.
+  The child $C$ of $N$ containing $v$ and the strong module $N'$ both contain $v$, so they are nested.
+  $C\subsetneq N'\subsetneq N$ would contradict $C$ being a child, so $N'\subseteq C$ and $|C|\ge|N'|\ge s$,
+  contradicting that $C$ is an atom.
+\item \emph{Let $N\in\cL$, $u\in U$ and $T:=N(u)\cap Y$. Each anticomponent $A$ of $G[T]$ satisfies
+  $A\supseteq N$, or $A\cap N=\emptyset$, or $A\subsetneq N$.} This holds because $A$ is a module of $G[Y]$
+  by hypothesis and $N$ is strong. In the third case, if $N$ is prime, Lemma~\ref{lem:md2} puts $A$ inside
+  a single child of $N$.
+\item \emph{If $N\supsetneq N'$ are in $\cL$, then $S(N)\cap N'=\emptyset$, and every vertex of $Y\setminus
+  N'$ is complete or anticomplete to $N'$.} The first part is the argument of (F1), and the second holds
+  because $N'$ is a module.
+\end{enumerate}
+
+\emph{Step 1: an antichain bound.} We use the following counting fact. Let $2\le K_0\le K_1$ and $M\ge0$,
+and let $\cA$ be a family of sets, each of size at most $M$, such that for every integer
+$K\in[K_0,K_1]$ fewer than $K$ members of $\cA$ have size at least $n/K^4$. Then
+\begin{equation}\label{eq:antichain}
+\sum_{A\in\cA}|A|\;\le\;(K_0-1)M+\frac{n}{K_0-1}+|\cA|\,\frac{n}{K_1^4}.
+\end{equation}
+Indeed, fewer than $K_0$ members have size at least $n/K_0^4$, and each has size at most $M$. For
+$K_0\le K<K_1$, at most $K$ members have size in $[n/(K+1)^4,n/K^4)$, contributing at most $n/K^3$. The
+remaining members have size below $n/K_1^4$. Finally $\sum_{K\ge K_0}K^{-3}\le\sum_{K\ge
+K_0}\bigl(\frac1{K-1}-\frac1K\bigr)=\frac1{K_0-1}$.
+
+Let $K_0$ be the least integer with $K_0^4\ge k$ and put $a:=K_0-1$. Then $a^4<k$ and, since $k\ge2^{16}$,
+$a\ge15$. Moreover $K_0\le K_1$: from $a^8<k^2\le4/x$ and $a^7\ge8$ we get $8ax\le a^8x<4$, so $(a+1)x\le
+2ax<1$.
+
+\emph{Step 2: a heavy chain.} Let $\cL^*:=\{N\in\cL:|N|\ge t\}$ and let $\mathcal M$ be the set of minimal
+members of $\cL^*$. They are pairwise disjoint modules of size at least $t\ge n/K_0^4$. So if $|\mathcal
+M|\ge K_0$, any $K_0$ of them form a pure $(K_0,n/K_0^4)$-blockade by Lemma~\ref{lem:md1}, which is (TL1).
+Assume $|\mathcal M|\le a$.
+
+Let $\mathcal X$ be the set of maximal members of $\cL\setminus\cL^*$. They are pairwise disjoint and
+have sizes in $[s,t)$, so $|\mathcal X|\le n/s$. If for some $K\in[K_0,K_1]$ at least $K$ of them have size
+at least $n/K^4$, those $K$ sets form a pure $(K,n/K^4)$-blockade, which is (TL1). Otherwise
+\eqref{eq:antichain} with $M=t$ gives
+\[
+\sum_{A\in\mathcal X}|A|\le a\frac nk+\frac na+\frac ns\cdot\frac n{K_1^4}
+\le\frac{n}{a^3}+\frac n{15}+\frac{4}{x^2}\cdot16x^4n\le\Bigl(\frac1{3375}+\frac1{15}+2^{-34}\Bigr)n\le\frac n4,
+\]
+using $a^4<k$, $a\ge15$, $K_1\ge1/(2x)$ and $x\le2^{-20}$. Every member of $\cL\setminus\cL^*$ lies inside a
+member of $\mathcal X$, and layers are disjoint, so the layers of members of $\cL\setminus\cL^*$ have total
+size at most $n/4$. By (F1),
+\[
+\sum_{N\in\cL^*}|S(N)|\;\ge\;\frac{3n}4 .
+\]
+Every $N\in\cL^*$ contains a member of $\mathcal M$. Summing over $m\in\mathcal M$ and using $|\mathcal M|\le a$,
+there is $m\in\mathcal M$ such that the family $\mathcal C:=\{N\in\cL^*:N\supseteq m\}$ satisfies
+\[
+\sum_{N\in\mathcal C}|S(N)|\;\ge\;\frac{3n}{4a}.
+\]
+Its members all contain $m$, so by laminarity $\mathcal C$ is a chain.
+
+\emph{Step 3: a thick layer.} Suppose $|S(N)|\ge t$ for some $N\in\mathcal C$, and put $S:=S(N)$.
+\begin{itemize}[leftmargin=1.5em]
+\item \emph{$G[N]$ disconnected.} The children of $N$ are its components, so each component of $G[S]$ is
+  an atom and has fewer than $s$ vertices. Since $s=x^2n/4\le xt\le|S|/K_1$, Lemma~\ref{lem:cores}
+  applied in the complement gives an anticomplete $(K_1,|S|/K_1^2)$-blockade, and $|S|/K_1^2\ge
+  x^2t=x^2n/k$. This is (TL3).
+\item \emph{$\Gbar[N]$ disconnected.} The same argument with anticomponents gives a complete blockade: (TL3).
+\item \emph{$N$ prime.} Let $K':=\floor{1/(xk)}\ge2$. Let $u\in U$ with $S\not\subseteq N(u)$ and
+  $r:=|N(u)\cap S|\ge x|S|/4$, and let $T:=N(u)\cap Y$. Let $A$ be an anticomponent of $G[T]$ meeting $S$.
+  If $A\supseteq N$ then $S\subseteq N(u)$, which is excluded, and $A\cap N=\emptyset$ is impossible. So by
+  (F2) $A$ lies in a single child of $N$, and since it meets $S$, that child is an atom. Thus $N(u)\cap S$
+  is a union of anticomponents of $G[T]$, each inside an atom. These are the anticomponents of $G[N(u)\cap
+  S]$, and each has fewer than $s$ vertices. Now $r/K'\ge r\,xk\ge\frac{xt}4xk=s$, so
+  Lemma~\ref{lem:cores} gives a complete $(K',r/K'^2)$-blockade, and $r/K'^2\ge\frac{xt}{4}(xk)^2\ge
+  x^3n/4$. This is (TL4). If no such $u$ exists, $Y':=S$ satisfies (TL5).
+\end{itemize}
+
+\emph{Step 4: all layers thin.} Otherwise $|S(N)|<t$ for all $N\in\mathcal C$. Let $L$ be the largest
+integer with $(8L)^4\le k^3$. Then $L\ge8$ and $k^3<(8L+8)^4\le(9L)^4$, as required in (TL2). Since
+$(8La)^4\le k^3a^4<k^4$, we have $8La<k$ and so
+\[
+2Lt=\frac{2Ln}{k}\le\frac{3n}{4a}\le\sum_{N\in\mathcal C}|S(N)| .
+\]
+For $N\in\mathcal C$ let $P(N):=\sum_{N'\in\mathcal C,\,N'\supseteq N}|S(N')|$ be the layer mass from the top
+of the chain down to $N$. For $0\le j<L$ let the \emph{chunk} $\Gamma_j$ be the union of the layers $S(N)$
+with $2jt<P(N)\le2(j+1)t$. For every $\theta\le\sum_{N\in\mathcal C}|S(N)|$, the layers with $P(N)\le\theta$
+have total size in $(\theta-t,\theta]$, because each layer has fewer than $t$ vertices. Taking
+$\theta=2jt$ and $\theta=2(j+1)t$ shows that every chunk has more than $t$ vertices. If $j<j'$, every chain
+member contributing to $\Gamma_{j'}$ lies strictly inside every chain member contributing to $\Gamma_j$:
+its $P$-value is larger, and $P$ can only grow down the chain.
+
+Say that $v\in Y$ has \emph{type~1} if $v$ is complete to every $N'\in\mathcal C$ with $v\notin N'$. A
+vertex $v$ without type~1 is anticomplete to every such $N'$. To see this, take a member $N''\not\ni v$
+to which $v$ is not complete; by (F3) $v$ is anticomplete to $N''$. Any other $N'\not\ni v$ is
+comparable with $N''$, and $v$ is complete or anticomplete to it. If $N'\subseteq N''$, then $v$ is
+anticomplete to $N'$. If $N'\supseteq N''$, then $v$ has a non-neighbour in $N''\subseteq N'$, so again
+$v$ is anticomplete to $N'$. Now let $v\in S(N)\subseteq\Gamma_j$ and $w\in S(N')\subseteq\Gamma_{j'}$ with
+$j<j'$. Then $N'\subsetneq N$, so $v\notin N'$ by (F3), and $v$ is adjacent to $w$ exactly when $v$ has
+type~1. Let $\Gamma'_j\subseteq\Gamma_j$ be the vertices of the majority type, so $|\Gamma'_j|\ge t/2=n/(2k)$.
+Then $(\Gamma'_0,\dots,\Gamma'_{L-1})$ is a pure $(L,n/(2k))$-blockade: (TL2).
+\end{proof}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=0.9,
+  heavy/.style={circle,draw,fill=newpart,minimum size=0.62cm,inner sep=0pt,font=\scriptsize},
+  light/.style={circle,draw,fill=black!10,minimum size=0.46cm,inner sep=0pt},
+  atom/.style={circle,draw,fill=white,minimum size=0.2cm,inner sep=0pt}]
+  % the heavy chain C
+  \foreach \t/\lab in {0/Y,1/N_1,2/N_2,3/m} \node[heavy] (N\t) at (0,-1.4*\t) {$\lab$};
+  \foreach \t/\u in {0/1,1/2,2/3} \draw[very thick,blue!60!black] (N\t) -- (N\u);
+  % atoms and layers
+  \foreach \t/\mm in {0/3,1/2,2/4,3/3} {
+    \foreach \j in {1,...,\mm} {\node[atom] (a\t\j) at (0.95+0.42*\j,-1.4*\t-0.5) {};
+      \draw[black!45] (N\t) -- (a\t\j);}
+    \node[draw,dashed,rounded corners=2pt,fit=(a\t1)(a\t\mm),inner sep=2.5pt,
+      label={[font=\scriptsize]right:$S(\t)$}] {};
+  }
+  % other members of L*
+  \node[heavy,fill=newpart!35] (H1) at (-1.5,-2.8) {};
+  \draw[very thick,blue!25] (N1) -- (H1);
+  \node[heavy,fill=newpart!35] (H2) at (-1.5,-4.2) {};
+  \draw[very thick,blue!25] (H1) -- (H2);
+  \node[font=\scriptsize,align=center,text width=1.8cm] at (-1.5,-5.2) {another minimal heavy module};
+  % light members
+  \node[light] (L0) at (-1.5,-0.55) {}; \draw[black!45] (N0) -- (L0);
+  \node[light] (L1) at (-2.6,-0.55) {}; \draw[black!45] (N0) to[bend right=12] (L1);
+  \node[font=\scriptsize,align=center] at (-2.1,0.15) {$\mathcal X$: light modules};
+  % chunks
+  \draw[decorate,decoration={brace,amplitude=5pt},thick] (4.45,-0.2) -- (4.45,-2.2)
+    node[midway,right=6pt,font=\scriptsize] {$\Gamma_0$};
+  \draw[decorate,decoration={brace,amplitude=5pt},thick] (4.45,-3.0) -- (4.45,-4.9)
+    node[midway,right=6pt,font=\scriptsize] {$\Gamma_1$};
+  % outcome panel
+  \node[draw,rounded corners=3pt,align=left,font=\scriptsize,text width=5.6cm] at (9.0,-2.1) {%
+  \textbf{Where each outcome comes from}\\[3pt]
+  $\bullet$ $K_0$ disjoint heavy modules, or $K$ disjoint light modules of size $\ge n/K^4$: pure
+  blockade by MD1, \textbf{TL1}.\\[2pt]
+  $\bullet$ Otherwise the light modules carry at most $n/4$, and one chain $\mathcal C$ above a minimal
+  heavy module $m$ carries a $1/a$ share of the rest.\\[2pt]
+  $\bullet$ A thick layer $|S(N)|\ge n/k$ on $\mathcal C$: a disconnected or anticonnected node gives
+  \textbf{TL3}. At a prime node every trace $N(u)\cap S(N)$ splits into small anticomponents (MD2); a
+  large trace gives \textbf{TL4}, otherwise $Y'=S(N)$ is \textbf{TL5}.\\[2pt]
+  $\bullet$ All layers thin: cut $\mathcal C$ into chunks $\Gamma_j$ of mass about $2n/k$. A vertex sees
+  every later chunk the same way (F3), so the majority type gives \textbf{TL2}.};
+\end{tikzpicture}
+\caption{The proof of the Tooth Lemma. Circles are strong modules of $G[Y]$ with at least $s=x^2n/4$
+vertices. Blue: heavy modules, with at least $t=n/k$ vertices; the dark path is the chain $\mathcal C$ of
+heavy modules above one minimal heavy module $m$. Grey: light modules. Small white circles are atoms,
+and the dashed box $S(i)$ is the layer of the $i$-th member of the chain.}
+\label{fig:tooth}
+\end{figure}
+
+\begin{lemma}[Pair Lemma]\label{lem:pair}
+Let $Y_1,Y_2$ be sets of vertices and $\theta>0$. Suppose every $w\in Y_1$ has
+$Y_2\subseteq N(w)$ or $|N(w)\cap Y_2|<\theta|Y_2|$, and every $u\in Y_2$ has $Y_1\subseteq N(u)$ or
+$|N(u)\cap Y_1|<\theta|Y_1|$. Then $(Y_1,Y_2)$ is complete or weakly $2\theta$-sparse.
+\end{lemma}
+\begin{proof}
+Let $F:=\{u\in Y_2:Y_1\subseteq N(u)\}$. If $|F|\ge\theta|Y_2|$, then every $w\in Y_1$ has at least
+$\theta|Y_2|$ neighbours in $Y_2$, so $Y_2\subseteq N(w)$ and the pair is complete. Otherwise
+$e(Y_1,Y_2)<|F||Y_1|+|Y_2|\,\theta|Y_1|<2\theta|Y_1||Y_2|$.
+\end{proof}

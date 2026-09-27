@@ -1,0 +1,165 @@
+\documentclass[11pt]{amsart}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\DeclareUnicodeCharacter{1D9C}{\ensuremath{^{\mathsf{c}}}}
+\usepackage{lmodern}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs,tabularx,longtable,array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc,backgrounds,decorations.pathreplacing}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=green!40!black,urlcolor=blue!60!black]{hyperref}
+
+\hypersetup{pdftitle={The Erdos-Hajnal property for the six-vertex path},pdfauthor={Claude (Anthropic)}}
+
+\definecolor{nonedge}{RGB}{200,40,40}
+\definecolor{edgegrey}{RGB}{150,150,150}
+\definecolor{imported}{RGB}{255,236,200}
+\definecolor{newpart}{RGB}{214,234,255}
+
+% ---------------------------------------------------------------- Lean listings
+\lstdefinelanguage{lean}{
+  morekeywords={axiom,theorem,lemma,def,fun,Type,Prop,Finset,SimpleGraph,Fintype,DecidableEq,DecidableRel},
+  sensitive=true, morecomment=[l]{--}, morestring=[b]"
+}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, keywordstyle=\bfseries,
+  columns=fullflexible, keepspaces=true, breaklines=true, frame=single, rulecolor=\color{black!25},
+  xleftmargin=0.5em, xrightmargin=0.5em, aboveskip=0.6em, belowskip=0.6em,
+  literate=
+   {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
+   {¬}{{$\neg$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {⊆}{{$\subseteq$}}1 {∈}{{$\in$}}1
+   {ℝ}{{$\mathbb{R}$}}1 {ℕ}{{$\mathbb{N}$}}1 {ᶜ}{{$^{\mathsf{c}}$}}1 {⌊}{{$\lfloor$}}1
+   {⌋}{{$\rfloor$}}1 {₊}{{$_{+}$}}1 {↔}{{$\leftrightarrow$}}1 {Δ}{{$\Delta$}}1
+   {ε}{{$\varepsilon$}}1 {δ}{{$\delta$}}1 {ℓ}{{$\ell$}}1 {β}{{$\beta$}}1 {τ}{{$\tau$}}1
+}
+
+% ---------------------------------------------------------------- theorems
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}{Claim}
+\newtheorem{theoremL}{Theorem}
+\renewcommand{\thetheoremL}{\Alph{theoremL}}
+\newtheorem{importedthm}{Imported Theorem}
+\renewcommand{\theimportedthm}{\Roman{importedthm}}
+\newtheorem*{conjecture}{Conjecture (Erd\H{o}s--Hajnal)}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---------------------------------------------------------------- macros
+\newcommand{\cP}{\overline{P_6}}
+\newcommand{\Gbar}{\overline{G}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\famP}{\mathcal{P}}
+\newcommand{\famQ}{\mathcal{Q}}
+\newcommand{\floor}[1]{\lfloor #1\rfloor}
+\newcommand{\ceil}[1]{\lceil #1\rceil}
+\newcommand{\repo}{\url{https://github.com/machine-qed/erdos-hajnal-six-vertex-path}}
+
+\title{The Erd\H{o}s--Hajnal property for the six-vertex path}
+% the empty optional argument keeps the author out of the running heads
+\author[]{Claude (Anthropic)}
+\thanks{This paper, the proof it contains and the accompanying Lean formalization were produced by
+an AI system in a research session commissioned by the owner of the repository \repo, who is
+responsible for their release. It is not a publication of Anthropic, and Anthropic has not
+reviewed it. The paper has not been refereed. Please report problems as issues in that repository. The paper is
+released under CC BY 4.0.}
+\date{September 2026}
+
+\begin{document}
+
+\begin{abstract}
+We prove that there is $\tau>0$ such that every graph on $n$ vertices with no induced path on six vertices
+has a clique or a stable set with at least $n^{\tau}$ vertices; that is, the six-vertex path $P_6$ has
+the Erd\H{o}s--Hajnal property. The proof follows the proof of Nguyen, Scott and Seymour for the
+five-vertex path and replaces the two steps of that proof which use the absence of an induced house. One
+replacement is structural: a \emph{module law} forced by the absence of the complement of $P_6$, combined
+with the modular decomposition of the teeth of a comb (the \emph{Tooth Lemma}), shows that combs can be
+cleaned into blockades whose pairs are complete or sparse on average, and the layout theorem of Nguyen,
+Scott and Seymour accepts such blockades. The other replacement shows that the blocks on which a vertex
+is lightly mixed induce a house-free pattern, so that the Erd\H{o}s--Hajnal theorem for $P_5$ can be
+applied to the pattern. The whole argument has been formalized in Lean~4 with Mathlib. The formalization
+also proves one of the four cited theorems, takes the other three as hypotheses, and has been checked
+both by Lean's kernel and by an independent type checker.
+\end{abstract}
+
+\maketitle
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\input{s_intro}
+\input{s_overview}
+\input{s0_prelim}
+\input{s1_local}
+\input{s2_tooth}
+\input{s3_comb}
+\input{s4_round1}
+\input{s5_layout}
+\input{s6_round2}
+\input{s7_conclusion}
+\input{s8_c01}
+\input{s9_formal}
+
+\section*{Acknowledgements}
+The architecture of the proof is that of the proof for $P_5$ by Tung Nguyen, Alex Scott and Paul
+Seymour~\cite{NSS7}. The proof relies on theorems of Vojt\v{e}ch R\"odl~\cite{Rodl}, of Nguyen, Scott and
+Seymour~\cite{NSS5,NSS7}, and of Maria Chudnovsky, Alex Scott, Paul Seymour and Sophie Spirkl~\cite{C5}.
+The formalization uses Lean~\cite{lean4} and Mathlib~\cite{mathlib}, and was checked with
+\lean{leanchecker} (Kim Morrison and Sebastian Ullrich), comparator and lean4export (Lean
+FRO)~\cite{comparator}, and nanoda~\cite{nanoda}. Review comments from ChatGPT (OpenAI), passed on by the
+owner of the repository, led to several corrections, among them the move to a current Lean release and
+the check with an independent kernel. None of the people named here has reviewed this paper.
+
+\begin{thebibliography}{99}
+\bibitem{APS} N.~Alon, J.~Pach and J.~Solymosi, Ramsey-type theorems with forbidden subgraphs,
+  \emph{Combinatorica} 21 (2001), 155--170.
+\bibitem{BLT} N.~Bousquet, A.~Lagoutte and S.~Thomass\'e, The Erd\H{o}s--Hajnal conjecture for paths
+  and antipaths, \emph{J. Combin. Theory Ser. B} 113 (2015), 261--264.
+\bibitem{CS} M.~Chudnovsky and S.~Safra, The Erd\H{o}s--Hajnal conjecture for bull-free graphs,
+  \emph{J. Combin. Theory Ser. B} 98 (2008), 1301--1310.
+\bibitem{C5} M.~Chudnovsky, A.~Scott, P.~Seymour and S.~Spirkl, Erd\H{o}s--Hajnal for graphs with no
+  5-hole, \emph{Proc. Lond. Math. Soc. (3)} 126 (2023), 997--1014.
+\bibitem{EH77} P.~Erd\H{o}s and A.~Hajnal, On spanned subgraphs of graphs, in: \emph{Contributions to Graph
+  Theory and its Applications (Oberhof, 1977)}, Tech. Hochschule Ilmenau, 1977, 80--96.
+\bibitem{EH} P.~Erd\H{o}s and A.~Hajnal, Ramsey-type theorems, \emph{Discrete Appl. Math.} 25 (1989),
+  37--52.
+\bibitem{Gallai} T.~Gallai, Transitiv orientierbare Graphen, \emph{Acta Math. Acad. Sci. Hungar.} 18
+  (1967), 25--66.
+\bibitem{HJZ} S.~Huang, Y.~Ju and Y.~Zhou, Erd\H{o}s--Hajnal conjecture beyond five-vertex graphs,
+  arXiv:2606.06258 (2026).
+\bibitem{NSS5} T.~Nguyen, A.~Scott and P.~Seymour, Induced subgraph density. V. All paths approach
+  Erd\H{o}s--Hajnal, arXiv:2307.15032 (2023).
+\bibitem{NSS7} T.~Nguyen, A.~Scott and P.~Seymour, Induced subgraph density. VII. The five-vertex path,
+  \emph{Proc. Lond. Math. Soc.} 132 (2026), e70133; arXiv:2312.15333.
+\bibitem{Rodl} V.~R\"odl, On universality of graphs with uniformly distributed edges, \emph{Discrete
+  Math.} 59 (1986), 125--134.
+\bibitem{TN} V.-H.~Tran and T.~M.~Nguyen, The Erd\H{o}s--Hajnal property for the six-vertex graph with edge set
+  $\{ab,bc,cd,de,af,bf,df\}$, arXiv:2608.28551 (2026).
+\bibitem{comparator} Lean FRO, comparator: a trustworthy judge for Lean proofs,
+  \url{https://github.com/leanprover/comparator}, version \texttt{v4.34.0}.
+\bibitem{nanoda} nanoda: an external type checker for Lean~4,
+  \url{https://github.com/ammkrn/nanoda_lib}, commit \texttt{3a24072}.
+\bibitem{Wilder} J.~Wilder, p6-erdos-hajnal (partial results towards the Erd\H{o}s--Hajnal property for
+  $P_6$), \url{https://github.com/jaredwilder/p6-erdos-hajnal}, accessed 27 September 2026.
+\bibitem{Lax54} \'E.~Bonnet, Erd\H{o}s--Hajnal for graphs with no 5-hole, Lean formalization, Lax archive
+  lax-54 (2026), \url{https://github.com/EdouardBonnet/EH-C5}.
+\bibitem{Lax57} \'E.~Bonnet, Erd\H{o}s--Hajnal for the five-vertex path, Lean formalization, Lax archive
+  lax-57 (2026), \url{https://github.com/EdouardBonnet/EH-P5}.
+\bibitem{mathlib} The mathlib Community, The Lean mathematical library, \emph{CPP 2020}, 367--381.
+\bibitem{lean4} L.~de~Moura and S.~Ullrich, The Lean 4 theorem prover and programming language,
+  \emph{CADE-28} (2021), 625--635.
+\end{thebibliography}
+
+\end{document}

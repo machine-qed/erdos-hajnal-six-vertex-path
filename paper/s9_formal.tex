@@ -1,0 +1,153 @@
+\section{The formalization}\label{sec:formal}
+
+\subsection{What is checked}
+The directory \texttt{formal/} of the repository \repo{} contains a Lean~4 project that proves
+Theorem~\ref{thm:main}. The file \texttt{formal/EHP6/Defs.lean} contains the target statement and the
+definitions it uses; they are quoted below. A graph is a \lean{SimpleGraph} on a finite type, sizes are compared as
+real numbers, and $G$ is $H$-free if no injective map from $V(H)$ to $V(G)$ preserves both adjacency
+and non-adjacency.
+\begin{lstlisting}
+def pathGraph' (n : ℕ) : SimpleGraph (Fin n) := SimpleGraph.fromRel (fun i j => i.val + 1 = j.val)
+def P6 : SimpleGraph (Fin 6) := pathGraph' 6
+
+def ContainsInduced {n : ℕ} (H : SimpleGraph (Fin n)) (S : Finset V) : Prop :=
+  ∃ f : Fin n → V, Function.Injective f ∧ (∀ i, f i ∈ S) ∧ ∀ i j, G.Adj (f i) (f j) ↔ H.Adj i j
+def Free {n : ℕ} (H : SimpleGraph (Fin n)) : Prop := ¬ ContainsInduced G H Finset.univ
+
+def IsCliqueF (T : Finset V) : Prop := ∀ a ∈ T, ∀ b ∈ T, a ≠ b → G.Adj a b
+def IsStableF (T : Finset V) : Prop := ∀ a ∈ T, ∀ b ∈ T, a ≠ b → ¬ G.Adj a b
+
+def EHforP6 : Prop :=
+  ∃ τ : ℝ, 0 < τ ∧
+    ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj],
+      Free G P6 → ∃ T : Finset V, (IsCliqueF G T ∨ IsStableF G T) ∧
+        (Fintype.card V : ℝ) ^ τ ≤ T.card
+\end{lstlisting}
+The four imported theorems are the propositions \lean{RodlCoP6}, \lean{NssPath6}, \lean{EhP5} and
+\lean{NssComb} of \texttt{formal/EHP6/Imported.lean}, displayed next to their sources in
+Section~\ref{sec:imported}. The main theorems, in \texttt{formal/EHP6/Final.lean}, are
+\begin{lstlisting}
+theorem erdos_hajnal_P6_of_imported (hR : RodlCoP6) (hP : NssPath6) (hE : EhP5) (hC : NssComb) :
+    EHforP6
+theorem erdos_hajnal_P6_of_cited (hR : RodlCoP6) (hE : EhP5) (hC : NssComb) : EHforP6
+\end{lstlisting}
+The second follows from the first and \lean{nss\_path6\_proof : NssPath6}, the formal proof of
+Theorem~\ref{imp:path} in \texttt{NSSPath.lean}.
+The file \texttt{Audit.lean} prints the axioms on which each main lemma depends. For this theorem the
+output is
+\begin{lstlisting}
+'EHP6.erdos_hajnal_P6_of_imported' depends on axioms: [propext, Classical.choice, Quot.sound]
+\end{lstlisting}
+and the same holds for \lean{erdos\_hajnal\_P6\_of\_cited} and \lean{nss\_path6\_proof}.
+These are the three standard axioms of Lean's logic, so Lean checks outright that Theorems I, III and IV
+imply Theorem~\ref{thm:main}. The file \texttt{Axioms.lean} asserts these three propositions as
+axioms, citing the literature, and \lean{EHP6.erdos\_hajnal\_P6 : EHforP6} is the main theorem applied to
+them; its axiom list consists of the three standard axioms and these three. To trust the formal result
+one has to trust the Lean kernel, the definitions above, and the propositions \lean{RodlCoP6},
+\lean{EhP5} and \lean{NssComb} of \texttt{Imported.lean}.
+No proof in the project uses \lean{sorry}.
+
+The file \texttt{DefsCheck.lean} ties these definitions to Mathlib's standard ones. It proves that
+\lean{P6} is Mathlib's \lean{pathGraph 6}, that \lean{Free G H} holds exactly when there is no induced
+embedding of $H$ into $G$ in Mathlib's sense (\lean{SimpleGraph.Embedding}), that \lean{IsCliqueF} and
+\lean{IsStableF} agree with Mathlib's \lean{IsClique} and \lean{IsIndepSet}, and that \lean{Sparse G x S}
+says that the induced subgraph on $S$ has maximum degree at most $x|S|$. It then restates the main
+theorem using Mathlib's definitions only, again with no axioms beyond the three standard ones.
+
+\subsection{Correspondence}
+Table~\ref{tab:corr} lists, for every numbered statement of this paper, the Lean theorem that proves it.
+Lean statements are sometimes slightly more general, for example stated for a vertex set $S$ of a larger
+graph rather than for a graph, or with lengths and widths as real numbers.
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright}p{0.27\textwidth}>{\raggedright}p{0.45\textwidth}>{\raggedright\arraybackslash}p{0.2\textwidth}@{}}
+\caption{Paper to Lean.}\label{tab:corr}\\
+\toprule
+paper & Lean theorem & file \\
+\midrule
+\endfirsthead
+\toprule
+paper & Lean theorem & file \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Imported Theorems I--IV & \lean{RodlCoP6}, \lean{NssPath6}, \lean{EhP5}, \lean{NssComb}; I, III, IV asserted as \lean{rodl\_coP6}, \lean{eh\_P5}, \lean{nss\_comb} & \texttt{Imported.lean}, \texttt{Axioms.lean}\\
+Imported Theorem~\ref{imp:path}, proved & \lean{nss\_path}, \lean{nss\_path6\_proof} & \texttt{NSSPath.lean}\\
+Lemma~\ref{lem:cores} & \lean{nss\_L41\_proof} & \texttt{NSSL41.lean}\\
+Lemma~\ref{lem:locate} & \lean{nss\_L42\_proof} & \texttt{NSSL42.lean}\\
+Lemma~\ref{lem:anticonn} & \lean{exists\_anticonn\_subset} & \texttt{Round2Util.lean}\\
+modular decomposition, Lemmas~\ref{lem:md1}, \ref{lem:md2} & \lean{strong\_laminar}, \lean{module\_pure}, \lean{children\_anticomplete\_of\_not\_conn}, \lean{children\_complete\_of\_not\_conn\_compl}, \lean{module\_in\_child\_of\_prime} & \texttt{MD.lean}, \texttt{MDGallai.lean}\\
+the six-vertex certificate (Figure~\ref{fig:certificates}) & \lean{coP6\_of\_facts} & \texttt{Certificate.lean}\\
+Lemma~\ref{lem:module} (module law) & \lean{module\_law} & \texttt{Local.lean}\\
+Lemmas~\ref{lem:diagonal}, \ref{lem:house} & \lean{diagonal\_lemma}, \lean{house\_lemma} & \texttt{House.lean}\\
+Corollary~\ref{cor:housefree} & \lean{light\_pattern\_house\_free}, \lean{light\_hom} & \texttt{House.lean}, \texttt{Round2Hom.lean}\\
+Lemma~\ref{lem:tooth} (Tooth Lemma) & \lean{tooth\_lemma}; Steps 1--4: \lean{antichain\_mass}, \lean{heavy\_chain}, \lean{node\_step}, \lean{chain\_blockade}; (F1): \lean{sum\_atomPart\_eq} & \texttt{Tooth.lean}, \texttt{Tooth*.lean}\\
+Lemma~\ref{lem:pair} (Pair Lemma) & \lean{pair\_lemma} & \texttt{Pair.lean}\\
+Lemma~\ref{lem:comb} & \lean{comb\_lemma}; Step 1: \lean{comb\_extract}; Steps 2--4: \lean{comb\_from\_data} & \texttt{Comb.lean}, \texttt{CombExtract.lean}\\
+Lemma~\ref{lem:r1step} & \lean{round1\_step} & \texttt{Round1.lean}\\
+Lemma~\ref{lem:r1} & \lean{round1} & \texttt{Round1.lean}\\
+Lemma~\ref{lem:r1blockade} & \lean{round1\_blockade} & \texttt{Round1.lean}\\
+Theorem~\ref{thm:layout} & \lean{layout\_theorem}; (L3) under refinement: \lean{ref\_L3} & \texttt{Layout.lean}\\
+Lemma~\ref{lem:nice} & \lean{nice\_P6} & \texttt{Nice.lean}\\
+Lemma~\ref{lem:round2step} & \lean{round2\_step}; Steps 2, 3: \lean{pass1\_full}, \lean{pass2\_full}; the claim in Step 4: \lean{light\_small} & \texttt{Round2.lean}, \texttt{Round2Pass.lean}, \texttt{Round2Hom.lean}\\
+Lemma~\ref{lem:round2} & \lean{round2} & \texttt{Round2b.lean}\\
+Definition~\ref{def:crux}, Corollary~\ref{cor:crux} & \lean{CruxC}, \lean{crux\_P6} & \texttt{Defs.lean}, \texttt{Crux.lean}\\
+Lemma~\ref{lem:c01a} & \lean{c01\_lemma1} & \texttt{C01Lemma1.lean}\\
+Lemma~\ref{lem:c01b} & \lean{c01\_lemma2}; the induction: \lean{c01\_tree} & \texttt{C01Tree.lean}\\
+Theorem~\ref{thm:polyrodl} & \lean{polyRodl} & \texttt{Final.lean}\\
+Theorem~\ref{thm:main} & \lean{eh\_of\_polyRodl}, \lean{erdos\_hajnal\_P6\_of\_imported}, \lean{erdos\_hajnal\_P6\_of\_cited}, \lean{erdos\_hajnal\_P6} & \texttt{C01EH.lean}, \texttt{Final.lean}\\
+\end{longtable}}
+
+\subsection{Independent checks}
+Lean's kernel is small, and tactics can only produce proof terms that the kernel re-checks, so an error
+in a tactic cannot make a false statement pass. Kernel bugs are the remaining risk. Lean versions up to
+4.33.0 have known soundness bugs, all requiring deliberately constructed input. The project was first
+written for Lean~4.15.0 and was then ported, changing proof scripts only, to Lean~4.34.1, the current
+release, in which all of them are fixed. The following checks were run on that version.
+\begin{enumerate}[leftmargin=1.8em]
+\item \emph{Build and audit.} Every file is elaborated and checked by the kernel, and the axiom audit
+  gives the output above.
+\item \emph{Fresh replay.} \lean{leanchecker -{}-fresh EHP6.Final} re-checks, starting from an empty
+  environment, every declaration on which the final file depends, Mathlib included. This takes about eleven minutes.
+\item \emph{Comparator.} The comparator tool~\cite{comparator} builds a trusted file,
+  \texttt{Challenge.lean}, that states both main theorems with no proof and imports only
+  \texttt{Defs.lean} and \texttt{Imported.lean}. It checks that the project proves exactly these statements using only the three
+  standard axioms, and replays the exported proof in the Lean kernel.
+\item \emph{Independent kernel.} Comparator also passes the exported proof to nanoda~\cite{nanoda}, a type
+  checker written in Rust that shares no code with Lean's kernel. It accepts the proof.
+\end{enumerate}
+As negative controls, comparator rejects the same statement with the hypothesis \lean{hE} removed
+(``statement do not match'') and rejects \lean{erdos\_hajnal\_P6} when only the standard axioms are
+permitted (``Illegal axiom detected''). The project contains no \lean{unsafe} code, no
+\lean{native\_decide} and no metaprogramming. For a false proof to pass checks 3 and 4 it would have to
+fool two unrelated kernels at once.
+
+\subsection{Reproducing the checks}
+The project uses Lean \texttt{v4.34.1} (file \texttt{formal/lean-toolchain}) and Mathlib at tag
+\texttt{v4.34.1}, pinned in \texttt{formal/lake-manifest.json} to the commit
+\begin{center}\texttt{d13f23b723b8a846827a245b89c10fc7d3f11612}.\end{center}
+With \texttt{elan} installed, run in \texttt{formal/}:
+\begin{lstlisting}
+lake exe cache get      # download the compiled Mathlib
+lake build              # check every file of the project
+lake env lean Audit.lean
+lake env leanchecker --fresh EHP6.Final
+\end{lstlisting}
+The repository runs the build, the audit, the fresh replay, comparator and nanoda on every push in GitHub Actions
+(\texttt{.github/workflows/lean.yml}), with every tool pinned to a fixed commit. The job fails if any
+\lean{sorry} occurs, if an axiom other than the three standard ones appears in
+\lean{erdos\_hajnal\_P6\_of\_imported}, \lean{erdos\_hajnal\_P6\_of\_cited} or
+\lean{nss\_path6\_proof}, or if either kernel rejects the proof. The file
+\texttt{VERIFICATION.md} records the tool versions and outputs, and the release notes record the commit
+and checksums of the released version.
+
+\subsection{Two corrections made during formalization}
+The formalization found two errors in earlier versions of the argument, both in the statements of
+cited results rather than in the new part of the proof. First, an early version assumed
+Lemma~\ref{lem:locate} as an axiom without the hypothesis $A\ne\emptyset$; in that form the statement is
+false (take $A=\emptyset$ and $B\ne\emptyset$). The hypothesis was added, and both Lemma~\ref{lem:cores} and
+Lemma~\ref{lem:locate} are now proved in the project rather than assumed. Second, the source of the comb
+lemma was misattributed in an early draft; Theorem~\ref{imp:comb} is~\cite[Lemma 4.3]{NSS7}, a special
+case of a lemma in~\cite{C5}. Each of the four imported propositions was checked against the \LaTeX{}
+source of the cited paper, and Theorem~\ref{imp:path} was then proved in the formalization.

@@ -1,0 +1,125 @@
+\section{Round two: mixed vertices and the house-free pattern}\label{sec:round2}
+
+This section follows~\cite[Lemmas 7.1 and 7.2]{NSS7}. The new ingredient is the claim in Step 4 of the proof of
+Lemma~\ref{lem:round2step}: where the proof for $P_5$ uses the house to show that an outside vertex
+cannot be mixed on two complete blocks, we use Corollary~\ref{cor:housefree}.
+
+Throughout, $d\ge200$ is the integer of Lemma~\ref{lem:r1blockade}, $\kappa>0$ is the exponent of
+Theorem~\ref{imp:eh5}, $M$ is an integer with $M\ge5/\kappa+4$, and
+\[
+N:=10d^2,\qquad A_1:=M(N+3).
+\]
+
+\begin{lemma}\label{lem:round2step}
+Let $y\in(0,\frac18]$ and let $G$ be a $y$-sparse $\cP$-free graph. Then one of the following holds:
+\begin{enumerate}[label=(\alph*)]
+\item some $T\subseteq V(G)$ with $|T|\ge y^{A_1}|G|$ is $y^4$-sparse;
+\item $G$ has a complete $(1/y,y^{A_1}|G|)$-blockade;
+\item there are disjoint $X,Y$ with $|X|\ge y^{A_1}|G|$ and $|Y|\ge(1-4y)|G|$, $X$ anticomplete to $Y$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Assume (a) and (b) fail. Put $\eps:=y^M$. Since $y\le\frac18$ and $M\ge5$,
+\[
+\eps\le2^{-15},\qquad\eps\le y^5,\qquad8\eps\le y^2,\qquad y^{A_1}=\eps^{N+3}.
+\]
+If $|G|\le\eps^{-(N+3)}$, a single vertex gives (a). So $|G|>\eps^{-(N+3)}$. Let
+\[
+\ell:=\ceil{1/\eps},\qquad m:=\ceil{\eps^N|G|},\qquad b:=\ceil{\eps^2m}.
+\]
+Then $1/\eps\le\ell\le2/\eps$, $\eps^N|G|\le m\le2\eps^N|G|$ and $m>\eps^{-3}$, so $1\le\eps^2m\le b\le2\eps^2m$.
+Consequently $b\le m/(2\ell)$ and $(\ell-1)\eps^2m\le m/2$, because $4\eps^2\ell\le8\eps\le1$.
+
+\emph{Step 1: a semisparse blockade.} By Lemma~\ref{lem:nice} (with $\eps<\frac12$ and $|G|\ge\eps^{-N}$)
+there are disjoint $A_1,\dots,A_\ell$ with $|A_i|\ge\eps^N|G|$, hence $|A_i|\ge m$, such that every two of
+them are complete or weakly $\eps^d$-sparse. Below, a pair $p\ne q$ is \emph{non-complete} if $A_p$ is not
+complete to $A_q$.
+
+\emph{Step 2: equal sizes.} Put $K_1:=2\ell\eps^d$ and $K_2:=\eps^{d-3}$; then $2\ell K_1=4\ell^2\eps^d\le K_2$.
+For $i=1,\dots,\ell$ in turn we choose $X_i\subseteq A_i$ with $|X_i|=m$ such that, for all non-complete pairs
+among the indices chosen so far,
+\begin{enumerate}[label=(P\arabic*)]
+\item $e(X_p,A_q)\le K_1m|A_q|$ whenever $p<q$ (here $q$ need not be chosen yet);
+\item $e(X_{p'},X_p)\le K_2m^2$ whenever $p'<p$.
+\end{enumerate}
+Suppose $X_1,\dots,X_{i-1}$ are chosen. Let $n:=\floor{|A_i|/m}\ge1$ and let $P_1,\dots,P_n$ be disjoint
+subsets of $A_i$ of size $m$; note $|A_i|\le2nm$. For each $q\ne i$ with $(q,i)$ non-complete, give
+$P_j$ the score $e(X_q,P_j)/(2K_1m^2)$ if $q<i$, and $e(P_j,A_q)/(2\eps^dm|A_q|)$ if $q>i$. For fixed $q$ the
+scores of $P_1,\dots,P_n$ add up to at most $n$: if $q<i$ this is (P1) for $(q,i)$, since $\sum_je(X_q,P_j)\le
+e(X_q,A_i)\le K_1m|A_i|\le2K_1nm^2$; if $q>i$ it is weak sparsity, since $\sum_je(P_j,A_q)\le
+\eps^d|A_i||A_q|\le2\eps^dnm|A_q|$. Summing over at most $\ell$ indices $q$, some $P_j$ has total score at most
+$\ell$, and we put $X_i:=P_j$. Then every single score of $X_i$ is at most $\ell$. This gives
+$e(X_i,A_q)\le2\ell\eps^dm|A_q|=K_1m|A_q|$ for $q>i$, and $e(X_q,X_i)\le2\ell K_1m^2\le K_2m^2$ for $q<i$.
+
+\emph{Step 3: anticonnected blocks.} Put $\theta_1:=\eps^{d-5}$ and $\theta_2:=\eps^{d-7}$. Then
+$K_2=\eps^2\theta_1$, $\theta_1=\eps^2\theta_2$ and $\theta_1m\le\theta_2b$. For $i=1,\dots,\ell$ in turn we choose an
+anticonnected $B_i\subseteq X_i$ with $|B_i|=b$ such that, for all non-complete pairs,
+\begin{enumerate}[label=(Q\arabic*)]
+\item $B_p$ is $\theta_1$-sparse to $X_q$ whenever $p<q$;
+\item $B_p$ is $\theta_2$-sparse to $B_{p'}$ and $B_{p'}$ is $\theta_2$-sparse to $B_p$ whenever $p'<p$.
+\end{enumerate}
+Suppose $B_1,\dots,B_{i-1}$ are chosen. For $q\ne i$ with $(q,i)$ non-complete let
+\[
+C_q:=\begin{cases}\{w\in X_i:|N(w)\cap B_q|>\theta_2b\}&(q<i),\\ \{w\in X_i:|N(w)\cap X_q|>\theta_1m\}&(q>i).\end{cases}
+\]
+If $q<i$, (Q1) gives $e(B_q,X_i)\le b\,\theta_1m$, so $|C_q|\le\theta_1m/\theta_2=\eps^2m$. If $q>i$, (P2) gives
+$e(X_i,X_q)\le K_2m^2$, so $|C_q|\le K_2m/\theta_1=\eps^2m$. Let $D:=X_i\setminus\bigcup_qC_q$. Then
+$|D|\ge m-(\ell-1)\eps^2m\ge m/2$. If every anticomponent of $D$ has fewer than $|D|/\ell$ vertices,
+Lemma~\ref{lem:cores} gives a complete $(\ell,|D|/\ell^2)$-blockade. Here $\ell\ge1/\eps\ge1/y$ and
+$|D|/\ell^2\ge\frac m2\cdot\frac{\eps^2}4\ge\eps^{N+3}|G|$, so this is (b), which we excluded. Hence some
+anticomponent of $D$ has at least $|D|/\ell\ge m/(2\ell)\ge b$ vertices, and by Lemma~\ref{lem:anticonn} it
+contains an anticonnected set $B_i$ of exactly $b$ vertices. Since $B_i$ avoids $C_q$ for $q>i$, (Q1) holds
+for $B_i$. Since $B_i$ avoids $C_q$ for $q<i$, $B_i$ is $\theta_2$-sparse to $B_q$. Conversely, by (Q1) every
+vertex of $B_q$ has at most $\theta_1m\le\theta_2b$ neighbours in $X_i\supseteq B_i$, so $B_q$ is $\theta_2$-sparse to
+$B_i$.
+
+\emph{Step 4: a block system.} The sets $B_1,\dots,B_\ell$ are disjoint, anticonnected and of size $b$. Two
+of them are complete if the corresponding $A$'s are, and otherwise $\theta_2$-sparse to each other in both
+directions. Since $\theta_2=\eps^{d-7}\le\eps<\frac12$, they form a block system in the sense of
+Section~\ref{sec:local}, with $W=b$ and $x=\theta_2$. Let $U:=\bigcup_iB_i$ and $R_0:=V(G)\setminus U$. Since
+$|U|=\ell b\le\frac2\eps\cdot2\eps^2m\le8\eps\cdot\eps^N|G|\le y^2|G|$, we have $|R_0|\ge(1-y^2)|G|$.
+
+\emph{Claim: every $v\in R_0$ has $|I(v)|<y\ell$.} Suppose $|I(v)|\ge y\ell$. Then $|I(v)|\ge
+y/\eps=y^{-(M-1)}$, and since $(M-1)\kappa\ge5$,
+\[
+|I(v)|^\kappa\ge y^{-(M-1)\kappa}\ge y^{-5}.
+\]
+By Corollary~\ref{cor:housefree} there is $R\subseteq I(v)$ with $r:=|R|\ge y^{-5}$ whose blocks are pairwise
+complete or pairwise non-complete. Let $T:=\bigcup_{i\in R}B_i$, so $|T|=rb$, and note $b\ge\eps^2m\ge
+\eps^{N+2}|G|\ge y^{A_1}|G|$. If the blocks are pairwise non-complete, they are pairwise $\theta_2$-sparse, and
+a vertex of $T$ has fewer than $b\le y^5|T|$ neighbours in its own block and at most $r\theta_2b\le y^5|T|$ in the
+others, because $\theta_2\le\eps\le y^5$. So $T$ is $2y^5$-sparse, hence $y^4$-sparse, and $|T|\ge y^{A_1}|G|$:
+this is (a). If the blocks are pairwise complete, they form a complete $(r,b)$-blockade with $r\ge y^{-5}\ge
+1/y$: this is (b). Both were excluded, which proves the claim.
+
+\emph{Step 5: the anticomplete pair.} By the claim, $\sum_{v\in R_0}|I(v)|<y\ell|R_0|$, so some index $i$
+belongs to $I(v)$ for fewer than $y|R_0|$ vertices $v\in R_0$. Since $G$ is $y$-sparse, $e(V(G),B_i)\le
+b\,y|G|$, so at most $2y|G|$ vertices have at least $b/2$ neighbours in $B_i$. Let $Y$ be the set of $v\in
+R_0$ with no neighbour in $B_i$. A vertex of $R_0\setminus Y$ has between $1$ and $b/2$ neighbours in $B_i$,
+so $i\in I(v)$, or it has at least $b/2$. Therefore
+\[
+|Y|\ge|R_0|-y|R_0|-2y|G|\ge(1-y)(1-y^2)|G|-2y|G|\ge(1-4y)|G| .
+\]
+With $X:=B_i$ we have $|X|=b\ge y^{A_1}|G|$, and $X$ is anticomplete to $Y$: this is (c).
+\end{proof}
+
+\begin{lemma}\label{lem:round2}
+Suppose $A_1=2k$ for an integer $k$. Let $y\in(0,2^{-16}]$ and let $G$ be a $y$-sparse $\cP$-free graph.
+Then one of the following holds:
+\begin{enumerate}[label=(\roman*)]
+\item some $T\subseteq V(G)$ with $|T|\ge y^{k+1}|G|$ is $y^2$-sparse;
+\item $G$ has a complete or anticomplete $(y^{-1/2},y^{k+1}|G|)$-blockade.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Let $s:=y^{1/2}\le2^{-8}$, so $256y\le s$ and $s^{A_1}=y^k$. Call $(B_0,\dots,B_n)$ a chain if the sets are
+disjoint and pairwise anticomplete, $|B_i|\ge y^{k+1}|G|$ for $i<n$, and $|B_n|\ge(1-4s)^n|G|$. Take a chain
+with $n$ maximal. If $n\ge1/s$, then $(B_0,\dots,B_{n-1})$ gives (ii). Otherwise $|B_n|\ge c|G|$ with
+$c=2^{-8}$, as in Lemma~\ref{lem:r1step}. Each vertex of $B_n$ has at most $y|G|\le256y|B_n|\le s|B_n|$
+neighbours, so $G[B_n]$ is $s$-sparse, and Lemma~\ref{lem:round2step} applies with $s\le\frac18$.
+Outcome (a) gives $T\subseteq B_n$ with $|T|\ge y^k|B_n|\ge y^kc|G|\ge y^{k+1}|G|$ that is $s^4=y^2$-sparse:
+this is (i). Outcome (b) gives a complete $(1/s,y^k|B_n|)$-blockade: this is (ii). Outcome (c) gives an
+anticomplete pair $X,Y\subseteq B_n$ with $|X|\ge y^{k+1}|G|$ and $|Y|\ge(1-4s)^{n+1}|G|$, and
+$(B_0,\dots,B_{n-1},X,Y)$ is a longer chain, which is impossible.
+\end{proof}

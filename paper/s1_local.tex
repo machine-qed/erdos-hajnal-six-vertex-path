@@ -1,0 +1,118 @@
+\section{The local lemmas}\label{sec:local}
+These three lemmas are the only places where $\cP$-freeness is used, apart from the imported
+Theorems~\ref{imp:rodl} and~\ref{imp:path}. Each is proved by exhibiting an induced $\cP$
+(Figure~\ref{fig:certificates}).
+
+\subsection{The module law}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=0.95,every node/.style={font=\small}]
+  \node[circle,fill,inner sep=1.6pt,label=above:$v$] (v) at (3.5,2.3) {};
+  \foreach \i/\x in {1/0,2/2.3,3/4.6,4/6.9} {
+    \draw[fill=newpart] (\x,0.2) ellipse (0.85 and 0.42);
+    \node at (\x,0.2) {$B_{\i}$};
+    \node[circle,fill,inner sep=1.4pt,label=below:$a_{\i}$] (a\i) at (\x,-1.5) {};
+    \draw[thick] (a\i) -- (\x-0.55,-0.1); \draw[thick] (a\i) -- (\x+0.55,-0.1); \draw[thick] (a\i) -- (\x,-0.22);
+    \draw[edgegrey] (v) -- (\x-0.4,0.55); \draw[edgegrey] (v) -- (\x+0.4,0.55);
+  }
+  \draw[nonedge,dashed,thick] (v) to[out=190,in=90] (-1.2,-0.6) to[out=-90,in=150] (a1);
+  \node[circle,fill,inner sep=1.3pt,label={[font=\scriptsize]right:$u$}] (u) at (4.9,0.25) {};
+  \draw[nonedge,dashed,thick] (u) -- (a2);
+  \node[font=\scriptsize,align=left] at (9.6,0.2) {teeth $B_i\subseteq N(v)$};
+  \node[font=\scriptsize,align=left] at (9.6,-1.5) {handles $a_i\notin N(v)$};
+\end{tikzpicture}
+\caption{A comb with root $v$. Each handle $a_i$ is complete to its own tooth $B_i$ and anticomplete
+to the other teeth, and $v$ is complete to every tooth and non-adjacent to the handles. The module law
+applies to $Z=B_i$ and a vertex $u$ of another tooth $B_j$: $u\sim v$ and $u\not\sim a_i$.}
+\label{fig:comb}
+\end{figure}
+
+\begin{lemma}[module law]\label{lem:module}
+Let $G$ be $\cP$-free, let $v,a$ be non-adjacent vertices, let $Z\subseteq N(v)\cap N(a)$, and let
+$u\notin Z$ with $u\sim v$ and $u\not\sim a$. Then every anticomponent $K$ of $N(u)\cap Z$ is a module of
+$G[Z]$.
+\end{lemma}
+\begin{proof}
+Vertices of $(N(u)\cap Z)\setminus K$ lie in other anticomponents of $N(u)\cap Z$, so they are complete to
+$K$. Suppose $y\in Z\setminus N(u)$ is mixed on $K$. Since $K$ is anticonnected and $N(y)\cap K$ and
+$K\setminus N(y)$ are both nonempty, there are $w\in N(y)\cap K$ and $z\in K\setminus N(y)$ with
+$w\not\sim z$. The six vertices $v,a,u,y,z,w$ are distinct: $v,a\notin Z$ because $Z\subseteq N(v)\cap
+N(a)$, and $u\notin Z$. Their adjacent pairs are $v$ with $u,y,z,w$ ($u\sim v$ by hypothesis, and
+$y,z,w\in Z$); $a$ with $y,z,w$; $u$ with $z,w$ (as $z,w\in K\subseteq N(u)$); and $yw$. The non-adjacent
+pairs are $va, au, uy, yz, zw$, a path. So $v,a,u,y,z,w$ induce $\cP$, a contradiction.
+\end{proof}
+
+\subsection{Mixed-vertex patterns are house-free}
+Throughout this subsection $B_1,\dots,B_\ell$ is a \emph{block system}: disjoint anticonnected sets of the
+same size $W\ge1$ such that, for some $x\in(0,\frac12)$, every two of them are complete or $x$-sparse to
+each other in both directions. Since $x<1$, no pair is both. The \emph{pattern graph} $J$ on $[\ell]$ has
+$ij\in E(J)$ if and only if $B_i$ is complete to $B_j$.
+
+\begin{lemma}[diagonal lemma]\label{lem:diagonal}
+Let $G$ be $\cP$-free, and let $b,c,d,e,f$ be indices such that $B_b$ is complete to $B_d,B_e,B_f$, $B_c$ is
+complete to $B_e,B_f$, $B_d$ is complete to $B_f$, and the pairs $(b,c),(c,d),(d,e),(e,f)$ are not
+complete (hence $x$-sparse). Then $B_e$ is anticomplete to $B_f$.
+\end{lemma}
+\begin{proof}
+Suppose $x_0\in B_e$ has a neighbour in $B_f$. Since $|N(x_0)\cap B_f|\le xW<W$, $x_0$ also has a
+non-neighbour in $B_f$, and since $B_f$ is anticonnected there are $p\in N(x_0)\cap B_f$ and $q\in
+B_f\setminus N(x_0)$ with $p\not\sim q$. Take $u_b\in B_b$, then $u_c\in B_c\setminus N(u_b)$ (possible as
+$|N(u_b)\cap B_c|\le xW<W$), then $u_d\in B_d\setminus(N(x_0)\cup N(u_c))$ (possible as each of $x_0,u_c$
+has at most $xW$ neighbours in $B_d$ and $2xW<W$). Among $p,q,x_0,u_d,u_c,u_b$ the adjacent pairs are
+$px_0$ (by choice); $p$ and $q$ with $u_d,u_c,u_b$ (as $B_f$ is complete to $B_d,B_c,B_b$); $x_0$ with
+$u_c,u_b$ (as $B_e$ is complete to $B_c,B_b$); and $u_du_b$ (as $B_d$ is complete to $B_b$). The non-adjacent
+pairs are $pq,qx_0,x_0u_d,u_du_c,u_cu_b$, a path. This is an induced $\cP$, a contradiction.
+\end{proof}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=1.0,every node/.style={font=\small}]
+  \coordinate (b) at (0,0); \coordinate (c) at (1.6,1.3); \coordinate (d) at (3.2,0);
+  \coordinate (e) at (2.4,-1.7); \coordinate (f) at (0.8,-1.7);
+  \foreach \p/\q in {b/d,b/e,b/f,c/e,c/f,d/f} \draw[thick] (\p) -- (\q);
+  \foreach \p/\q in {b/c,c/d,d/e,e/f} \draw[nonedge,dashed,thick] (\p) -- (\q);
+  \foreach \p in {b,c,d,e,f} {\draw[fill=newpart] (\p) circle (0.33); \node at (\p) {$B_{\p}$};}
+  \node[circle,fill,inner sep=1.6pt,label=right:$v$] (v) at (6.0,-0.4) {};
+  \draw[edgegrey] (v) to[bend right=25] ($(b)+(0.2,0.25)$);
+  \draw[edgegrey] (v) to[bend left=10] ($(e)+(0.3,0)$);
+  \draw[edgegrey] (v) to[bend left=30] ($(f)+(0.1,-0.3)$);
+  \node[font=\scriptsize,align=left] at (7.6,0.8) {$v$ mixed on $B_b$,\\ has neighbours in $B_e,B_f$,\\ misses $>xW$ of $B_d$};
+\end{tikzpicture}
+\caption{A house in the pattern graph: solid pairs are complete, dashed pairs are not complete. The four
+dashed pairs $bc,cd,de,ef$ form a path, so the pattern is the complement of $P_5$. By the house lemma no
+outside vertex $v$ can be lightly mixed on all five blocks.}
+\label{fig:house}
+\end{figure}
+
+\begin{lemma}[house lemma]\label{lem:house}
+Let $G$ be $\cP$-free and let $b,c,d,e,f$ be as in Lemma~\ref{lem:diagonal}. Then no vertex
+$v\notin\bigcup_iB_i$ has all of the following: a neighbour and a non-neighbour in $B_b$, a neighbour in
+$B_e$, a neighbour in $B_f$, and more than $xW$ non-neighbours in $B_d$.
+\end{lemma}
+\begin{proof}
+Suppose $v$ has them. Take $x_e\in N(v)\cap B_e$ and $x_f\in N(v)\cap B_f$; by Lemma~\ref{lem:diagonal},
+$x_e\not\sim x_f$. By anticonnectivity of $B_b$ there are $p_b\in N(v)\cap B_b$ and $q_b\in B_b\setminus
+N(v)$ with $p_b\not\sim q_b$. Take $u_d\in B_d\setminus(N(v)\cup N(x_e))$, possible because
+$|N(x_e)\cap B_d|\le xW<|B_d\setminus N(v)|$. Among $p_b,q_b,v,u_d,x_e,x_f$ the adjacent pairs are $p_b$
+and $q_b$ with $u_d,x_e,x_f$ (as $B_b$ is complete to $B_d,B_e,B_f$); $v$ with $p_b,x_e,x_f$; and $u_dx_f$ (as
+$B_d$ is complete to $B_f$). The non-adjacent pairs are $p_bq_b,q_bv,vu_d,u_dx_e,x_ex_f$, a path. This is
+an induced $\cP$, a contradiction.
+\end{proof}
+
+For a vertex $v\notin\bigcup_iB_i$ let $I(v)=\{i:0<|N(v)\cap B_i|<W/2\}$ be the set of blocks on which $v$
+is \emph{lightly mixed}, and $J_v=J[I(v)]$.
+
+\begin{corollary}\label{cor:housefree}
+Let $G$ be $\cP$-free and $v\notin\bigcup_iB_i$. Then $J_v$ is house-free. Consequently there is
+$R\subseteq I(v)$ with $|R|\ge|I(v)|^{\kappa}$ whose blocks are pairwise complete or pairwise not complete.
+\end{corollary}
+\begin{proof}
+An induced house in $J_v$ on $b,c,d,e,f$, with non-edges $bc,cd,de,ef$ (the complement of the path
+$b$--$c$--$d$--$e$--$f$), has exactly the completeness pattern of Lemma~\ref{lem:diagonal}. The vertex $v$ is
+mixed on $B_b$ and has neighbours in $B_e$ and $B_f$, and $|B_d\setminus N(v)|>W/2>xW$. This contradicts
+Lemma~\ref{lem:house}. For the second statement note that the complement of $J_v$ is $P_5$-free, so by
+Theorem~\ref{imp:eh5} it has a clique or a stable set with at least $|I(v)|^\kappa$ vertices, and so does
+$J_v$. A clique of $J_v$ is a set of pairwise complete blocks, and a stable set is a set of pairwise
+non-complete blocks.
+\end{proof}

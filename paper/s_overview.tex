@@ -1,0 +1,129 @@
+\section*{The idea of the proof}
+
+\subsection*{Iterative sparsification}
+Following Nguyen, Scott and Seymour, we reduce the Erd\H{o}s--Hajnal property to a statement about sparse
+graphs, Crux~(C) (Definition~\ref{def:crux}): every $y$-sparse $\cP$-free graph contains either a large
+induced subgraph that is much sparser, namely $y^2$-sparse, or a long complete or anticomplete blockade.
+Passing repeatedly to a much sparser large subgraph either stops at a long complete or anticomplete
+blockade or produces a very sparse set of polynomial size, and an argument of Nguyen, Scott and Seymour
+(Section~\ref{sec:c01}) turns this into the polynomial R\"odl property and then into
+Theorem~\ref{thm:main}. Crux~(C) is proved in two
+\emph{sparsification rounds}. Round one (Sections~\ref{sec:comb}--\ref{sec:layout}) proves that $P_6$ is
+\emph{nice}: every $\cP$-free graph contains a long blockade of polynomial width whose pairs are complete
+or sparse. Round two (Section~\ref{sec:round2}) turns niceness into Crux~(C).
+
+\subsection*{Where the house was used, and what replaces it}
+The proof for $P_5$ uses house-freeness twice, and both uses fail for $\cP$-free graphs.
+
+\emph{Round one: combs.} Around a vertex $v$ of large degree one finds a \emph{comb}: vertices
+$a_1,\dots,a_\ell\notin N(v)$ and disjoint \emph{teeth} $B_i\subseteq N(v)$ such that $a_i$ is complete to
+$B_i$ and anticomplete to every other tooth (Figure~\ref{fig:comb}). For house-free graphs, a vertex of one
+tooth cannot be mixed on another tooth, so the teeth are pure to each other. In a $\cP$-free graph this
+is false. What survives is the \emph{module law} (Lemma~\ref{lem:module}): for a vertex $u$ of another
+tooth, each anticomponent of $N(u)\cap B_i$ is a \emph{module} of $B_i$. Otherwise six vertices form an
+induced $\cP$ (Figure~\ref{fig:certificates}(a)). So an outside vertex sees a tooth only through the
+tooth's modular structure. The \emph{Tooth Lemma} (Lemma~\ref{lem:tooth}) exploits this through the
+modular decomposition tree of the tooth. Each tooth contains a long pure or complete blockade, or a large
+subset $Y'$ that every other tooth's vertices see either completely or very sparsely. In the second case
+the Pair Lemma shows that any two such subsets are complete or \emph{weakly sparse}, that is, sparse on
+average. The resulting blockades are \emph{semisparse} rather than pure. The last observation of round
+one is that the layout theorem of Nguyen, Scott and Seymour (Theorem~\ref{thm:layout}) only counts
+``wrong'' pairs, and a weakly sparse pair contributes few of them. So semisparse input suffices, and
+$P_6$ is nice.
+
+\emph{Round two: mixed vertices.} Given a long blockade of anticonnected blocks whose pairs are complete
+or sparse, the proof for $P_5$ uses the house to show that no outside vertex is mixed on two complete
+blocks. For $\cP$-free graphs a vertex can be mixed on many blocks, and the pattern of those blocks can be
+complicated. However, the pattern cannot contain a house. A house in the pattern of the blocks on which
+$v$ is lightly mixed yields an induced $\cP$ through $v$ (the house lemma, Lemma~\ref{lem:house};
+Figure~\ref{fig:certificates}(c)). One configuration inside the house must be shown anticomplete first,
+which is the job of the diagonal lemma (Lemma~\ref{lem:diagonal}; Figure~\ref{fig:certificates}(b)). A
+house-free graph is the complement of a $P_5$-free graph, so the Erd\H{o}s--Hajnal theorem for $P_5$
+applies to the pattern and gives polynomially many blocks that are pairwise complete or pairwise sparse.
+The first is a long complete blockade; the second is a much sparser set. Either way the round goes
+through.
+
+In short, the new part of the argument is the chain
+\begin{align*}
+&\text{module law}\;\to\;\text{Tooth Lemma}\;\to\;\text{semisparse comb}\;\to\;\text{semisparse layout}\\
+&\qquad\to\;\text{house-free block pattern}\;\to\;\mathrm{EH}(P_5).
+\end{align*}
+
+\subsection*{Where the six-vertex path enters}
+In each of the three places, the structure built so far produces six vertices with prescribed
+adjacencies: ten pairs are adjacent because of completeness between blocks or membership in a
+neighbourhood, and five are non-adjacent because of how the vertices were chosen. In all three
+configurations the five non-adjacent pairs form a path (Figure~\ref{fig:certificates}), so the six
+vertices induce $\cP$, which the hypothesis rules out. The hypothesis cannot simply be weakened: in the
+graph $\cP$ itself the module law fails, with $Z=\{y,z,w\}$ as in Figure~\ref{fig:certificates}(a).
+Since $\cP$ has no induced $\overline{P_7}$, the method does not extend to $P_7$ without new ideas.
+
+\begin{figure}[ht]
+\centering
+\newcommand{\certificate}[7]{%
+\begin{tikzpicture}[scale=1.15,every node/.style={font=\small}]
+  \foreach \i/\ang in {0/180,1/120,2/60,3/0,4/-60,5/-120} \coordinate (v\i) at (\ang:1.25);
+  % ten edges (grey)
+  \foreach \a/\b in {0/2,0/3,0/4,0/5,1/3,1/4,1/5,2/4,2/5,3/5}
+    \draw[edgegrey,line width=0.6pt] (v\a) -- (v\b);
+  % five non-edges forming the complement path (dashed red)
+  \foreach \a/\b in {0/1,1/2,2/3,3/4,4/5}
+    \draw[nonedge,line width=1.6pt,dash pattern=on 4pt off 2.5pt] (v\a) -- (v\b);
+  \foreach \i in {0,...,5} \fill (v\i) circle (2.2pt);
+  \node[left]  at (v0) {#1};
+  \node[above left] at (v1) {#2};
+  \node[above right] at (v2) {#3};
+  \node[right] at (v3) {#4};
+  \node[below right] at (v4) {#5};
+  \node[below left] at (v5) {#6};
+  \node at (0,-1.95) {#7};
+\end{tikzpicture}}
+\certificate{$v$}{$a$}{$u$}{$y$}{$z$}{$w$}{(a) module law}\hfill
+\certificate{$p$}{$q$}{$x_0$}{$u_d$}{$u_c$}{$u_b$}{(b) diagonal lemma}\hfill
+\certificate{$p_b$}{$q_b$}{$v$}{$u_d$}{$x_e$}{$x_f$}{(c) house lemma}
+\caption{The three six-vertex certificates. Dashed red: the five non-adjacent pairs, which form a path.
+Grey: the ten adjacent pairs. Each configuration is therefore an induced $\cP$. In (a), $v,a$ are the
+root and a handle of a comb, $u$ lies in another tooth, $y$ is a tooth vertex outside $N(u)$ mixed on an
+anticomponent $K$ of $N(u)\cap B_i$, and $w\in N(y)\cap K$, $z\in K\setminus N(y)$ are non-adjacent. In
+(b) and (c) the subscripts name the blocks $B_b,\dots,B_f$ of a house in the pattern graph. In (c), $v$ is
+the lightly mixed outside vertex.}
+\label{fig:certificates}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners=2pt,align=center,font=\footnotesize,minimum height=2.2em,inner sep=3pt},
+  new/.style={box,fill=newpart},
+  imp/.style={box,fill=imported},
+  inh/.style={box,fill=white},
+  arr/.style={-{Stealth[length=5pt]},thick,black!70}]
+  \node[new] (ML) at (0,0) {module law\\ Lemma~\ref{lem:module}};
+  \node[new] (MD) at (2.7,0) {modular\\decomposition, \S\ref{sec:md}};
+  \node[new] (PL) at (5.4,0) {Pair Lemma\\ Lemma~\ref{lem:pair}};
+  \node[imp] (IV) at (8.4,0) {IV: comb lemma\\ \cite{C5}};
+  \node[new] (TL) at (1.35,-1.35) {Tooth Lemma~\ref{lem:tooth}};
+  \node[new] (CL) at (4.8,-2.6) {comb lemma for $\cP$\\ Lemma~\ref{lem:comb} (semisparse)};
+  \node[imp] (R12) at (0.6,-3.9) {I: R\"odl\\ II: NSS~V 3.1};
+  \node[inh] (R1) at (4.8,-3.9) {round one\\ Lemmas~\ref{lem:r1step}--\ref{lem:r1blockade}};
+  \node[new] (LT) at (8.4,-3.9) {layout theorem,\\ semisparse form~\ref{thm:layout}};
+  \node[inh] (NI) at (4.8,-5.2) {$P_6$ is nice\\ Lemma~\ref{lem:nice}};
+  \node[new] (HL) at (0.6,-6.5) {diagonal \& house\\ \ref{lem:diagonal}--\ref{cor:housefree}};
+  \node[imp] (EH5) at (8.4,-6.5) {III: EH for $P_5$\\ \cite{NSS7}};
+  \node[new] (R2) at (4.8,-6.5) {round two\\ Lemmas~\ref{lem:round2step}, \ref{lem:round2}};
+  \node[inh] (CR) at (4.8,-7.8) {Crux (C), Corollary~\ref{cor:crux}};
+  \node[inh] (C01) at (4.8,-9.1) {reduction, \S\ref{sec:c01}: polynomial R\"odl};
+  \node[box,fill=black!8,font=\footnotesize\bfseries] (A) at (4.8,-10.35) {Theorem A: EH for $P_6$};
+  \draw[arr] (ML) -- (TL); \draw[arr] (MD) -- (TL);
+  \draw[arr] (TL) -- (CL); \draw[arr] (PL) -- (CL); \draw[arr] (IV) -- (CL);
+  \draw[arr] (CL) -- (R1); \draw[arr] (R12) -- (R1);
+  \draw[arr] (R1) -- (NI); \draw[arr] (LT) -- (NI);
+  \draw[arr] (NI) -- (R2); \draw[arr] (HL) -- (R2); \draw[arr] (EH5) -- (R2);
+  \draw[arr] (R2) -- (CR); \draw[arr] (CR) -- (C01);
+  \draw[arr] (R12.south) |- (C01.west);
+  \draw[arr] (C01) -- (A);
+\end{tikzpicture}
+\caption{Structure of the proof. Blue: proved here and specific to $\cP$ or new. Orange: the four
+imported theorems (II is proved in the formalization). White: steps that follow~\cite{NSS7}, with constants recomputed.}
+\label{fig:architecture}
+\end{figure}

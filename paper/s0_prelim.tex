@@ -1,0 +1,199 @@
+\setcounter{section}{-1}
+\section{Preliminaries}\label{sec:prelim}
+
+\subsection{Notation}
+Graphs are finite and simple, $|G|=|V(G)|$, $N(v)$ is the neighbourhood of $v$, and $G[X]$ is the
+subgraph induced on $X\subseteq V(G)$. We freely identify $X$ with $G[X]$. For disjoint $A,B$, $e(A,B)$ is
+the number of edges between them. $A$ is \emph{complete} (\emph{anticomplete}) to $B$ if every (no) pair
+$ab$ with $a\in A$, $b\in B$ is an edge. The pair is \emph{pure} if it is one of the two. A vertex is
+\emph{mixed} on a set if it has both a neighbour and a non-neighbour there.
+
+\begin{definition}[Sparsity]
+Let $x\ge0$. A graph $G$ is \emph{$x$-sparse} if every vertex has at most $x|G|$ neighbours, and
+\emph{$x$-restricted} if $G$ or $\Gbar$ is $x$-sparse. A set $X$ is $x$-sparse or $x$-restricted if $G[X]$
+is. For disjoint $A,B$: $B$ is \emph{$x$-sparse to} $A$ if every vertex of $B$ has at most $x|A|$
+neighbours in $A$, and $(A,B)$ is \emph{weakly $x$-sparse} if $e(A,B)\le x|A||B|$. If $B$ is $x$-sparse to
+$A$ then $(A,B)$ is weakly $x$-sparse.
+\end{definition}
+
+\begin{definition}[Blockades]
+For reals $k,w$, a \emph{$(k,w)$-blockade} is a sequence $(B_1,\dots,B_m)$ of pairwise disjoint sets
+(\emph{blocks}, possibly empty) with $m\ge k$ and $|B_i|\ge w$ for all $i$. It is \emph{complete},
+\emph{anticomplete} or \emph{pure} if every two blocks are complete, anticomplete or pure, respectively.
+It is \emph{$x$-sparse} if $B_j$ is $x$-sparse to $B_i$ whenever $i<j$, and \emph{$x$-semisparse} if every
+two blocks are complete or weakly $x$-sparse. A pure blockade is $0$-semisparse; an $x$-sparse blockade is
+$x$-semisparse.
+\end{definition}
+
+A set $X$ is \emph{anticonnected} if $\Gbar[X]$ is connected, equivalently if every partition of $X$ into
+two nonempty parts has a non-adjacent pair across. An \emph{anticomponent} of $X$ is the vertex set of a
+component of $\Gbar[X]$. Distinct anticomponents of $X$ are complete to each other, and each anticomponent
+is complete to the rest of $X$. We write $\hom(G)=\max(\alpha(G),\omega(G))=\hom(\Gbar)$. $P_k$ is the
+path on $k$ vertices, $\cP$ is its complement for $k=6$, namely six vertices whose five non-adjacent pairs
+form a path, and the \emph{house} is $\overline{P_5}$. Logarithms are to base $2$.
+
+\subsection{The four imported theorems}\label{sec:imported}
+We quote each result as stated in its source, together with the definitions it depends on, and then give
+the Lean proposition that renders it (file \texttt{formal/EHP6/Imported.lean}). The main formal theorem
+takes these four propositions as hypotheses. Theorem~\ref{imp:path} is proved in the formalization, so
+the unconditional formal result assumes only the other three; see Section~\ref{sec:formal}. Each proposition is stated for
+an arbitrary vertex set $S$ of a graph $G$, meaning the induced subgraph $G[S]$. This is equivalent to the source statement because induced
+subgraphs of $H$-free graphs are $H$-free. In the Lean code, \lean{Free G H} means that $G$ has no induced
+copy of $H$, \lean{Sparse G x S} means that every vertex of $S$ has at most $x|S|$ neighbours in $S$, and
+\lean{Restricted G x S} means \lean{Sparse G x S} or \lean{Sparse Gᶜ x S}. Section~\ref{sec:formal} gives the
+full definitions.
+
+\begin{importedthm}[R\"odl~\cite{Rodl}; stated as {\cite[Theorem 1.3]{NSS7}}]\label{imp:rodl}
+\emph{Source:} ``For every $\eps\in(0,1/2)$ and every graph $H$, there exists $\delta>0$ such that every
+$H$-free graph $G$ has an $\eps$-restricted induced subgraph with at least $\delta|G|$ vertices.'' Here
+$G$ is \emph{$\eps$-sparse} if its maximum degree is at most $\eps|G|$, and \emph{$\eps$-restricted} if one
+of $G,\Gbar$ is $\eps$-sparse. We use it only for $H=\cP$ and write $\delta(\eps)$ for the constant.
+\begin{lstlisting}
+def RodlCoP6 : Prop := ∀ ε : ℝ, 0 < ε → ε < 1 / 2 → ∃ δ : ℝ, 0 < δ ∧
+  ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj],
+    Free G P6ᶜ → ∀ S : Finset V, ∃ F ⊆ S, δ * S.card ≤ F.card ∧ Restricted G ε F
+\end{lstlisting}
+\end{importedthm}
+
+\begin{importedthm}[{\cite[statement 3.1]{NSS5}}]\label{imp:path}
+\emph{Source:} ``Let $P$ be a path with $k\ge2$ vertices, and let $0<y\le1/(60k)$. Let $G$ be a
+$y^2$-sparse graph. Then either $G$ contains a copy of $P$, or $G$ contains an anticomplete
+$(1/y,\lfloor y^2|G|\rfloor)$-blockade in $G$.'' In~\cite{NSS5} a blockade is a finite sequence of possibly
+empty disjoint sets, and a $(k,w)$-blockade has length at least $k$ and width at least $w$, as above. A
+``copy'' of $P$ is an induced copy: $H$-freeness in~\cite{NSS5} refers to induced subgraphs, and the
+proof of~\cite[3.1]{NSS5} constructs an induced path. We use it for $P=P_6$, so $k=6$ and $y\le1/360$.
+\begin{lstlisting}
+def NssPath6 : Prop := ∀ y : ℝ, 0 < y → y ≤ 1 / 360 →
+  ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj]
+    (S : Finset V), Sparse G (y ^ 2) S → ¬ ContainsInduced G P6 S →
+      ∃ β : Blockade S (1 / y) (⌊y ^ 2 * S.card⌋₊ : ℝ), β.IsAnticomplete G
+\end{lstlisting}
+\emph{Proved in the formalization} (\texttt{formal/EHP6/NSSPath.lean}, for every $k\ge1$), following the
+proof in~\cite{NSS5}. The only change is that the repeated removal of small sets with few neighbours
+is replaced by a maximal family of such sets, which are pairwise disjoint and anticomplete; the maximality
+gives the expansion property of the remaining vertices directly.
+\end{importedthm}
+
+\begin{importedthm}[Nguyen, Scott and Seymour~{\cite[Theorem 1.2]{NSS7}}]\label{imp:eh5}
+\emph{Source:} ``$P_5$ satisfies the Erd\H{o}s--Hajnal conjecture,'' that is, there exists $c>0$ such that
+every $P_5$-free graph $G$ has a clique or a stable set of size at least $|G|^{c}$. We fix such a
+$\kappa>0$. Since $\hom(G)=\hom(\Gbar)$, every house-free graph $G$ also has $\hom(G)\ge|G|^{\kappa}$.
+\begin{lstlisting}
+def EhP5 : Prop := ∃ c : ℝ, 0 < c ∧
+  ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj],
+    Free G P5 → ∃ T : Finset V, (IsCliqueF G T ∨ IsStableF G T) ∧ (Fintype.card V : ℝ) ^ c ≤ T.card
+\end{lstlisting}
+\end{importedthm}
+
+\begin{importedthm}[the comb lemma; {\cite[Lemma 4.3]{NSS7}}, a special case of a lemma of~\cite{C5}]\label{imp:comb}
+\emph{Source:} ``Let $G$ be a graph and let $A,B\subseteq V(G)$ be nonempty and disjoint, such that each
+vertex in $A$ has at most $\Delta>0$ neighbours in $B$. Then either at most $20\sqrt{|B|\Delta}$ vertices
+in $B$ have a neighbour in $A$; or for some integer $k\ge1$, there is a $(k,|B|/k^2)$-comb
+$((a_i,B_i):i\in[k])$ in $G$ where $a_i\in A$ and $B_i\subset B$ for all $i\in[k]$.'' Here an
+\emph{$(\ell,w)$-comb} is a sequence of pairs $((a_i,B_i):i\in[\ell])$ where $(B_1,\dots,B_\ell)$ is an
+$(\ell,w)$-blockade, the $a_i$ are pairwise distinct, $\{a_1,\dots,a_\ell\},B_1,\dots,B_\ell$ are pairwise
+disjoint, and for distinct $i,j$, $a_i$ is complete to $B_i$ and anticomplete to $B_j$. The symbol
+$\subset$ in the source denotes inclusion; for $k=1$ it must allow $B_1=B$.
+\begin{lstlisting}
+def NssComb : Prop :=
+  ∀ (V : Type) [Fintype V] [DecidableEq V] (G : SimpleGraph V) [DecidableRel G.Adj]
+    (A B : Finset V) (Δ : ℝ), Disjoint A B → A.Nonempty → B.Nonempty → 0 < Δ →
+    (∀ a ∈ A, ((nbrs G a B).card : ℝ) ≤ Δ) →
+    (((B.filter (fun b => ∃ a ∈ A, G.Adj a b)).card : ℝ) ≤ 20 * Real.sqrt (B.card * Δ)) ∨
+    (∃ ℓ : ℕ, 1 ≤ ℓ ∧ ∃ (a : Fin ℓ → V) (C : Fin ℓ → Finset V),
+      Function.Injective a ∧ (∀ i, a i ∈ A) ∧ (∀ i, C i ⊆ B) ∧
+      (∀ i j, i ≠ j → Disjoint (C i) (C j)) ∧
+      (∀ i, (B.card : ℝ) / ℓ ^ 2 ≤ (C i).card) ∧
+      (∀ i, ∀ c ∈ C i, G.Adj (a i) c) ∧
+      (∀ i j, i ≠ j → ∀ c ∈ C j, ¬ G.Adj (a i) c))
+\end{lstlisting}
+The disjointness of the apexes from the teeth follows from $A\cap B=\emptyset$.
+\end{importedthm}
+
+\subsection{Two elementary lemmas of Nguyen, Scott and Seymour}
+The proof also uses Lemmas 4.1 and 4.2 of~\cite{NSS7}. We prove both, since they are short and are
+proved in the formalization. The statement of~\cite[Lemma 4.2]{NSS7} needs the hypothesis $A\ne\emptyset$:
+for $A=\emptyset\ne B$ its hypothesis holds vacuously but its conclusion fails. This does not affect any
+use of it, here or in~\cite{NSS7}.
+
+\begin{lemma}[{\cite[Lemma 4.1]{NSS7}}]\label{lem:cores}
+Let $k\ge2$ be an integer and let $G$ be a graph all of whose anticomponents have fewer than $|G|/k$
+vertices. Then $G$ has a complete $(k,|G|/k^2)$-blockade.
+\end{lemma}
+\begin{proof}
+Let $n=|G|$, $w=n/k^2$, $c=n/k$. Distinct anticomponents are complete to each other, so if
+$\cG_1,\dots,\cG_k$ are disjoint collections of anticomponents, the unions $\bigcup\cG_1,\dots,\bigcup\cG_k$
+are pairwise complete. From any
+collection of anticomponents of total size at least $w$ we can pick a subcollection of total size in
+$[w,w+c)$: add members one at a time until the total reaches $w$, and use that every member has size
+$<c$. Pick such subcollections $\cG_1,\cG_2,\dots$ greedily from the anticomponents not yet used. After
+$j\le k-1$ steps at most $(k-1)(w+c)=n-n/k^2$ vertices are used, so the remaining anticomponents have
+total size at least $w$ and step $j+1$ is possible. The unions of $\cG_1,\dots,\cG_k$ form a complete
+$(k,n/k^2)$-blockade.
+\end{proof}
+
+Applied to $\Gbar$: if every component of $G$ has fewer than $|G|/k$ vertices, then $G$ has an
+anticomplete $(k,|G|/k^2)$-blockade.
+
+\begin{lemma}[{\cite[Lemma 4.2]{NSS7}}]\label{lem:locate}
+Let $x\in(0,\frac12)$, let $A\ne\emptyset$ and $B$ be sets of vertices, and suppose every vertex of $B$ has
+at least $x|A|$ neighbours in $A$. Then there is $A'\subseteq A$ with $|A'|\le1/x$ such that at least
+$|B|/2$ vertices of $B$ have a neighbour in $A'$.
+\end{lemma}
+\begin{proof}
+Let $U\subseteq B$. Counting edges, $\sum_{a\in A}|N(a)\cap U|=\sum_{b\in U}|N(b)\cap A|\ge x|A||U|$, so
+some $a\in A$ has at least $x|U|$ neighbours in $U$. Choose $a_1,a_2,\dots,a_t$ greedily, each covering an
+$x$-fraction of the vertices of $B$ not yet covered, where $t=\lfloor1/x\rfloor$. At most $(1-x)^t|B|$
+vertices remain uncovered. As $x<\frac12$, $t\ge2$ and $x>1/(t+1)$, so $1-x<t/(t+1)$, and Bernoulli's
+inequality $(1+1/t)^t\ge2$ gives $(1-x)^t\le(t/(t+1))^t\le\frac12$. Take $A'=\{a_1,\dots,a_t\}$.
+\end{proof}
+
+\begin{lemma}\label{lem:anticonn}
+If $D$ is anticonnected and $1\le b\le|D|$, then $D$ contains an anticonnected set of exactly $b$
+vertices.
+\end{lemma}
+\begin{proof}
+Start from a single vertex. If $B\subsetneq D$ is anticonnected, anticonnectivity of $D$ applied to the
+partition $(B,D\setminus B)$ gives $p\in B$ and $q\in D\setminus B$ with $pq\notin E(G)$, and $B\cup\{q\}$
+is anticonnected.
+\end{proof}
+
+\subsection{Modular decomposition}\label{sec:md}
+Let $Y$ be a set of vertices. A \emph{module} of $G[Y]$ is a set $M\subseteq Y$ such that every vertex of
+$Y\setminus M$ is complete or anticomplete to $M$. A module is \emph{strong} if it overlaps no other
+module, where two sets overlap if they meet and neither contains the other. The following facts are
+standard (Gallai~\cite{Gallai}); the forms used below are proved in the formalization. The strong modules
+of $G[Y]$ form a laminar family containing $Y$ and all singletons, that is, a rooted tree under inclusion.
+The \emph{children} of a strong module $N$ with $|N|\ge2$ are the maximal strong modules properly
+contained in $N$, and they partition $N$. There are three kinds of node:
+\begin{itemize}[leftmargin=1.5em]
+\item $N$ is \emph{parallel} if $G[N]$ is disconnected; then its children are the components of $G[N]$;
+\item $N$ is \emph{series} if $\Gbar[N]$ is disconnected; then its children are the anticomponents of
+  $N$;
+\item $N$ is \emph{prime} if $G[N]$ and $\Gbar[N]$ are both connected; then the quotient graph on the
+  children (two children adjacent if complete to each other) is prime, that is, it has at least four
+  vertices and no modules other than the trivial ones.
+\end{itemize}
+A module of $G[N]$ for a module $N$ of $G[Y]$ is a module of $G[Y]$.
+
+\begin{lemma}[MD1]\label{lem:md1}
+Disjoint modules $A,B$ of $G[Y]$ are pure to each other.
+\end{lemma}
+\begin{proof}
+Each $a\in A$ lies outside $B$, so it is complete or anticomplete to $B$. If $a_1\in A$ were complete and
+$a_2\in A$ anticomplete to $B$, any $b\in B$ would be mixed on the module $A$, impossible as $b\notin A$.
+\end{proof}
+
+\begin{lemma}[MD2]\label{lem:md2}
+If $N$ is a prime node, every module $X$ of $G[N]$ equals $N$ or is contained in one child of $N$.
+\end{lemma}
+\begin{proof}
+Let $I$ be the set of children meeting $X$, and suppose $|I|\ge2$. For a child $C\notin I$ and $c\in C$,
+the adjacency of $c$ to a child $M\in I$ equals its adjacency to $X\cap M$ ($M$ is a module and
+$c\notin M$), which equals its adjacency to $X$ ($X$ is a module and $c\notin X$). Hence $I$ is a module
+of the prime quotient, and since $|I|\ge2$ it contains all children. If some child $M_1\not\subseteq X$,
+take $m\in M_1\setminus X$. For every other child $M$ the adjacency of $m$ to $M$ equals its adjacency to
+$X\cap M$, which equals its adjacency to $X$. So in the quotient, $M_1$ is complete or anticomplete to all
+other children, and these, at least three of them, form a nontrivial module of the prime quotient, a
+contradiction. Hence every child lies in $X$, and $X=N$.
+\end{proof}

@@ -1,0 +1,67 @@
+\section{The layout theorem and niceness}\label{sec:layout}
+
+The layout theorem of Nguyen, Scott and Seymour~\cite[Theorem 6.1]{NSS7} turns ``every large induced
+subgraph has a short blockade of polynomial width'' into ``the graph has a long blockade of polynomial
+width''. As stated there, its input blockades are pure. Its proof only counts \emph{wrong} pairs,
+namely edges between blocks that are declared anticomplete, and a weakly sparse pair of blocks
+contributes few of them. So the same proof accepts semisparse input. We give it in full.
+
+\begin{theorem}\label{thm:layout}
+Let $\eps\in(0,1)$, let $d\ge1$ be an integer, put $x:=\eps^{5d}$, and let $G$ be a graph. Suppose every
+induced subgraph $F$ with $|F|\ge\eps^d|G|$ has, for some real $k\in[2,1/x]$, an $x$-semisparse
+$(k,|F|/k^d)$-blockade. Then $G$ has an $\eps^d$-semisparse $(1/\eps,x^{2d}|G|)$-blockade.
+\end{theorem}
+\begin{proof}
+If $G$ has no vertices, take $\ceil{1/\eps}$ empty blocks. Otherwise, a \emph{layout} is a family
+$\cF$ of pairwise disjoint nonempty sets $A\subseteq V(G)$ together with a set $\cG$ of pairs of distinct
+members of $\cF$ declared \emph{complete}, such that every declared pair is complete in $G$. An ordered
+pair $(u,w)$ of distinct vertices is \emph{decided} if no member of $\cF$ contains both, and \emph{wrong}
+if $uw\in E(G)$, $u\in A$, $w\in B$ for distinct $A,B\in\cF$, and $\{A,B\}\notin\cG$. A layout is \emph{good}
+if
+\begin{enumerate}[label=(L\arabic*)]
+\item $|A|\ge\eps^{2d}|G|$ for every $A\in\cF$;
+\item $\sum_{A\in\cF}|A|^{1/d}\ge|G|^{1/d}$;
+\item the number of wrong pairs is at most $x$ times the number of decided pairs.
+\end{enumerate}
+The layout $\cF=\{V(G)\}$, $\cG=\emptyset$ is good, and $|\cF|\le|G|$ always. Choose a good layout with
+$|\cF|$ maximum.
+
+\emph{Claim 1: if $|\cF|\ge1/\eps$, the members of $\cF$ form the required blockade.} For $A,B\in\cF$ with
+$\{A,B\}\in\cG$ the pair is complete. Otherwise every edge between $A$ and $B$ is wrong, so
+\[
+e(A,B)\le x\cdot\#\text{decided}\le x|G|^2\le x\eps^{-4d}|A||B|=\eps^d|A||B|
+\]
+by (L1). Also $|A|\ge\eps^{2d}|G|\ge x^{2d}|G|$.
+
+So assume $|\cF|<1/\eps$. Let $A$ be a largest member of $\cF$. By (L2), $|G|^{1/d}\le|\cF|\,|A|^{1/d}$, so
+$|A|\ge|\cF|^{-d}|G|\ge\eps^d|G|$. By hypothesis $G[A]$ has an $x$-semisparse blockade $(B_1,\dots,B_m)$
+with $m\ge k$, $k\in[2,1/x]$ and $|B_p|\ge|A|/k^d>0$.
+
+\emph{Claim 2: $k\ge1/\eps$.} Suppose $k<1/\eps$. Replace $A$ in $\cF$ by $B_1,\dots,B_m$. Declare $\{B_p,C\}$
+complete when $\{A,C\}\in\cG$, and $\{B_p,B_q\}$ complete when $B_p$ is complete to $B_q$. This is a layout.
+We check that it is good.
+(L1): $|B_p|\ge|A|/k^d\ge\eps^d|A|\ge\eps^{2d}|G|$.
+(L2): $\sum_p|B_p|^{1/d}\ge m(|A|/k^d)^{1/d}=\frac mk|A|^{1/d}\ge|A|^{1/d}$.
+(L3): Let $R$ be the set of ordered pairs with ends in distinct blocks $B_p,B_q$. Refining $A$ keeps every
+decided pair decided, and the pairs in $R$ were undecided before, so the new decided pairs include the old
+ones and $R$, disjointly. A new wrong pair either was already wrong, or lies in $R$ and is an edge between
+blocks $B_p,B_q$ that are not complete to each other. Pairs with an end in $A\setminus\bigcup_pB_p$ are never
+wrong, because that end lies in no member of the new layout. Blocks that are not complete are weakly
+$x$-sparse, so the new wrong pairs number at most $x\cdot\#\text{old decided}+x|R|\le x\cdot\#\text{new
+decided}$.
+Since $m\ge2$, the new layout has more members than $\cF$, contradicting maximality. This proves Claim 2.
+
+So $k\ge1/\eps$, and $(B_1,\dots,B_m)$ has at least $1/\eps$ blocks, each of size at least $|A|/k^d\ge
+x^d|A|\ge x^d\eps^d|G|\ge x^{2d}|G|$. Every two blocks are complete or weakly $x$-sparse, hence weakly
+$\eps^d$-sparse.
+\end{proof}
+
+\begin{lemma}[$P_6$ is nice]\label{lem:nice}
+Let $d$ be as in Lemma~\ref{lem:r1blockade}. For every $\eps\in(0,\frac12)$ and every $\cP$-free graph $G$
+with $|G|\ge\eps^{-10d^2}$, $G$ has an $\eps^d$-semisparse $(1/\eps,\eps^{10d^2}|G|)$-blockade.
+\end{lemma}
+\begin{proof}
+Put $x:=\eps^{5d}$; then $x<2^{-d}$. If $|F|\ge\eps^d|G|$ then $|F|\ge\eps^{d-10d^2}\ge\eps^{-5d^2}=x^{-d}$, so
+Lemma~\ref{lem:r1blockade} gives the hypothesis of Theorem~\ref{thm:layout} for $F$. The conclusion is the
+claim, since $x^{2d}=\eps^{10d^2}$.
+\end{proof}

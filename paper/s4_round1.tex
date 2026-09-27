@@ -1,0 +1,78 @@
+\section{Round one: iterative sparsification}\label{sec:round1}
+
+This section follows~\cite[Lemmas 5.3--5.5]{NSS7}, with Lemma~\ref{lem:comb} in place of their comb
+lemma. The only change is that the blockades produced are semisparse. Put $c:=2^{-8}$ and $y_0:=2^{-64}$.
+Two elementary facts are used repeatedly: an $x$-sparse blockade is $x$-semisparse, and if $0\le t\le
+\frac15$ and $nt\le4$ then $(1-t)^n\ge e^{-5}>c$.
+
+\begin{lemma}\label{lem:r1step}
+Let $0<x\le y\le y_0$ and let $G$ be a $cy^3$-sparse $\cP$-free graph with $|G|\ge2^8x^{-18}$. Then
+one of the following holds:
+\begin{enumerate}[label=(\alph*)]
+\item some $T\subseteq V(G)$ with $|T|\ge c|G|$ is $2y^4$-sparse;
+\item for some integer $K$ with $K^{16}\ge1/y$ and $K\le1/x$ there is an $x$-semisparse
+  $(K,|G|/K^{102})$-blockade;
+\item there is an $x$-sparse $(1/y,y^6|G|)$-blockade.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Call $(B_0,\dots,B_n)$ a \emph{chain} if the sets are disjoint, $B_j$ is $x$-sparse to $B_i$ for $i<j$,
+$|B_i|\ge y^6|G|$ for $i<n$, and $|B_n|\ge(1-4y)^n|G|$. The single set $(V(G))$ is a chain with $n=0$, and
+$n\le|G|$ for every chain, so we may take a chain with $n$ maximal. If $n\ge1/y$, then $(B_0,\dots,B_{n-1})$ is
+(c). Otherwise $n\cdot4y\le4$ and $4y\le\frac15$, so $|B_n|\ge(1-4y)^n|G|\ge c|G|$. Hence $G[B_n]$ is
+$y^3$-sparse, as each vertex has at most $cy^3|G|\le y^3|B_n|$ neighbours, and $|B_n|\ge x^{-18}$. Apply
+Lemma~\ref{lem:comb} to $G[B_n]$. Outcome (i) is (a) with $T=B_n$. Outcome (ii) gives (b), because
+$K^{16}\ge1/y\ge2^{64}$ forces $K\ge16$, so $|B_n|/K^{100}\ge c|G|/K^{100}\ge|G|/K^{102}$. In outcome (iii)
+we get disjoint $X,Y\subseteq B_n$ with $|X|\ge y^4|B_n|\ge y^4c|G|\ge y^6|G|$ and $|Y|\ge(1-4y)|B_n|\ge
+(1-4y)^{n+1}|G|$, with $Y$ $x$-sparse to $X$. Subsets of $B_n$ are $x$-sparse to every earlier block, so
+$(B_0,\dots,B_{n-1},X,Y)$ is a longer chain, contradicting maximality.
+\end{proof}
+
+\begin{lemma}\label{lem:r1}
+Let $0<x<y_0$ and let $G$ be a $cy_0^3$-sparse $\cP$-free graph with $|G|\ge2^{16}x^{-19}$. Then one of
+the following holds:
+\begin{enumerate}[label=(\arabic*)]
+\item for some integer $K$ with $16\le K\le1/x$ there is an $x$-semisparse $(K,|G|/K^{118})$-blockade;
+\item for some $y\in[x,y_0]$ there is an $x$-sparse $(1/y,y^7|G|)$-blockade.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+For $j\ge0$ let $y_j:=y_0c^{\,j}$. Call $j$ \emph{admissible} if $x c\le y_j$ and some $F\subseteq V(G)$ with
+$|F|\ge y_j|G|$ is $cy_j^3$-sparse. Then $j=0$ is admissible with $F=V(G)$, and admissible $j$ are bounded
+because $y_j\to0$. Let $j$ be the largest admissible index, $y:=y_j$, and $F$ a witness.
+
+\emph{Case $y\ge x$.} Then $|F|\ge y|G|\ge x|G|\ge2^8x^{-18}$, so Lemma~\ref{lem:r1step} applies to $G[F]$.
+In outcome (a), $T\subseteq F$ has $|T|\ge c|F|\ge y_{j+1}|G|$ and is $2y^4$-sparse, hence $cy_{j+1}^3$-sparse
+because $2y^4\le y^3c^4$. Also $xc\le yc=y_{j+1}$. So $j+1$ is admissible, a contradiction. Outcome (b) gives
+(1): $K^{16}\ge1/y\ge2^{64}$ gives $K\ge16$, and $|F|/K^{102}\ge y|G|/K^{102}\ge|G|/K^{118}$ because $yK^{16}\ge1$.
+Outcome (c) is an $x$-sparse $(1/y,y^6|F|)$-blockade with $y^6|F|\ge y^7|G|$, which is (2).
+
+\emph{Case $y<x$.} Then $F$ is $x^3$-sparse and $|F|\ge y|G|\ge xc|G|$, so $|F|\ge4/x$. Let
+$m:=\ceil{1/x}\le2/x$ and cut $F$ into $m$ disjoint parts of size $\floor{|F|/m}\ge x|F|/4$. Every vertex has at
+most $x^3|F|\le x\cdot x|F|/4$ neighbours in each part, so the parts form an $x$-sparse
+$(1/x,x|F|/4)$-blockade, and $x|F|/4\ge x^7|G|$. This is (2) with $y=x$.
+\end{proof}
+
+The next lemma is round one in its final form. It is the only place where the constant $d$ of the proof
+is fixed.
+
+\begin{lemma}\label{lem:r1blockade}
+There is an integer $d\ge200$ such that for every $x\in(0,2^{-d})$ and every $\cP$-free graph $G$ with
+$|G|\ge x^{-d}$ there are a real $k\in[2,1/x]$ and an $x$-semisparse $(k,|G|/k^d)$-blockade.
+\end{lemma}
+\begin{proof}
+Let $\delta:=\delta(2^{-200})$ from Theorem~\ref{imp:rodl}, let $L$ be an integer with $2^L\delta\ge1$, and
+put $d:=L+200$. Let $x\in(0,2^{-d})$ and $|G|\ge x^{-d}$. By Theorem~\ref{imp:rodl} there is $F$ with
+$|F|\ge\delta|G|$ that is $2^{-200}$-restricted. Note $2^{200}\le\delta2^d\le\delta/x$.
+
+\emph{Case $\overline{G}[F]$ is $2^{-200}$-sparse.} Then $\overline G[F]$ is $360^{-2}$-sparse and has no
+induced $P_6$. Theorem~\ref{imp:path} with $y=1/360$ gives an anticomplete
+$(360,\floor{360^{-2}|F|})$-blockade in $\overline G[F]$, that is, a complete one in $G$. Since
+$360^{-2}\delta|G|\ge360^{-2}\delta2^d\ge2$, the width is at least $360^{-2}|F|/2\ge|G|/2^d$. So $k=2$ works.
+
+\emph{Case $G[F]$ is $2^{-200}$-sparse.} Note $2^{-200}=cy_0^3$ and $x<y_0$. Also $|F|\ge\delta x^{-d}\ge
+2^{16}x^{-19}$. Apply Lemma~\ref{lem:r1} to $G[F]$. In outcome (1), take $k=K\in[16,1/x]$: the width is
+$|F|/K^{118}\ge\delta|G|/K^{118}\ge|G|/K^{d}$ because $K^{L+82}\ge2^L\ge1/\delta$. In outcome (2), take
+$k:=\floor{1/y}$. Then $2^{64}\le k\le1/y\le1/x$ and $y\ge1/(2k)$, so the width is $y^7|F|\ge
+(2k)^{-7}\delta|G|\ge|G|/k^d$. An $x$-sparse blockade is $x$-semisparse.
+\end{proof}

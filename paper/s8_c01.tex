@@ -1,0 +1,95 @@
+\section{From Crux (C) to the Erd\H{o}s--Hajnal property}\label{sec:c01}
+
+This section follows~\cite[Section 7]{NSS7}, where the analogous reduction is carried out for $P_5$.
+Lemma~\ref{lem:c01b} does not depend on the forbidden graph. We write the proof of
+Lemma~\ref{lem:c01b} as an induction that produces two families of blocks, which is the form used in the
+formalization. Throughout, $a$ is the exponent of Corollary~\ref{cor:crux}.
+
+\begin{lemma}\label{lem:c01a}
+There is an integer $A\ge1$ such that for every $x\in(0,\frac12)$ and every $\cP$-free graph $G$, either
+some induced subgraph $F$ with $|F|\ge x^A|G|$ is $x$-restricted, or $G$ has a complete or anticomplete
+$(k,|G|/k^A)$-blockade for some integer $k$ with $2\le k\le1/x$.
+\end{lemma}
+\begin{proof}
+Let $c_0:=2^{-17}$ and $\eta:=360^{-2}$, and let $\delta_2,t,L_2,A$ be as in Table~\ref{tab:constants}. Thus
+$c_0^t\le\delta_2$, $\eta\delta_22^{L_2}>2$, $t\ge a$, and $A\ge2(a+t)$, $A\ge L_2$. If $|G|<x^{-A}$, a single
+vertex is an $x$-restricted subgraph with $1\ge x^A|G|$. So assume $|G|\ge x^{-A}\ge2^A$. By
+Theorem~\ref{imp:rodl} there is $F_0$ with $|F_0|\ge\delta_2|G|$ that is $c_0$-restricted.
+
+\emph{Case $x\ge c_0$.} Then $F_0$ is $x$-restricted, and $|F_0|\ge\delta_2|G|\ge2^{-A}|G|\ge x^A|G|$, because
+$\delta_22^A\ge\delta_22^{L_2}\ge1$.
+
+\emph{Case $x<c_0$ and $\overline G[F_0]$ $c_0$-sparse.} Then $\overline G[F_0]$ is $\eta$-sparse and has no
+induced $P_6$, so Theorem~\ref{imp:path} with $y=1/360$ gives a complete $(360,\floor{\eta|F_0|})$-blockade in
+$G$. Since $\eta|F_0|\ge\eta\delta_22^A\ge2$, its width is at least $\eta\delta_2|G|/2\ge|G|/2^A$. This is the
+second outcome with $k=2\le1/x$.
+
+\emph{Case $x<c_0$ and $G[F_0]$ $c_0$-sparse.} For $j\ge0$ let $y_j:=c_0^{2^j}$, so $y_{j+1}=y_j^2$. Call $j$
+admissible if $x^2\le y_j$ and some $F$ with $|F|\ge y_j^t|G|$ is $y_j$-sparse. Then $j=0$ is admissible,
+witnessed by $F_0$, and admissible $j$ are bounded. Let $j$ be the largest admissible index, $y:=y_j\le c_0$,
+and $F$ a witness.
+
+If $x\le y$, apply Crux (C) to $G[F]$. In outcome (i) there is a $y^2$-sparse $T\subseteq F$ with
+$|T|\ge y^a|F|\ge y^{a+t}|G|\ge(y^2)^t|G|$, and $x^2\le y^2$, so $j+1$ is admissible, which is impossible. In
+outcome (ii) there is a complete or anticomplete $(y^{-1/2},y^a|F|)$-blockade. Let $k:=\ceil{y^{-1/2}}$. Then
+$k\ge2$, $k\le2y^{-1/2}\le2x^{-1/2}\le1/x$, and $k^{-2}\le y$, so the width is at least $y^{a+t}|G|\ge
+k^{-2(a+t)}|G|\ge|G|/k^A$. This is the second outcome.
+
+If $y<x$, then $F$ is $x$-sparse and $|F|\ge y^t|G|\ge x^{2t}|G|\ge x^A|G|$. This is the first outcome.
+\end{proof}
+
+\begin{lemma}[{cf.~\cite[Theorem 7.4]{NSS7}}]\label{lem:c01b}
+Let $\eps\in(0,1)$, let $A\ge1$ be an integer, and let $G$ be a graph such that every induced subgraph $F$
+with $|F|\ge\eps^{2A}|G|$ has a complete or anticomplete $(k,|F|/k^A)$-blockade for some integer
+$k\in[2,1/\eps]$. Then $G$ has an $\eps$-restricted induced subgraph with at least $\eps^{3A}|G|$ vertices.
+\end{lemma}
+\begin{proof}
+We may assume $|G|\ge1$. Put $T_0:=\eps^{2A}|G|$ and $w:=\eps^{3A}|G|=\eps^AT_0$. We show by induction on
+$|F|$: \emph{for every $F\subseteq V(G)$ with $|F|\ge w$ there are families $\famP,\famQ$ of pairwise
+disjoint subsets of $F$, each of size at least $w$, such that the members of $\famP$ are pairwise
+anticomplete, the members of $\famQ$ are pairwise complete, and}
+\[
+|F|\le(|\famP|\,|\famQ|)^A\,T_0 .
+\]
+If $|F|<T_0$, take $\famP=\famQ=\{F\}$. Otherwise the hypothesis gives a complete or anticomplete blockade
+$(B_1,\dots,B_m)$ in $G[F]$ with $m\ge k\ge2$, $k\eps\le1$ and $|B_i|\ge|F|/k^A\ge\eps^A|F|\ge\eps^AT_0=w$. Each
+$B_i$ is smaller than $F$, because another block is nonempty. By induction each $B_i$ has families
+$\famP_i,\famQ_i$ with $|B_i|\le(|\famP_i||\famQ_i|)^AT_0$. Let $\mu:=\min_i|\famP_i||\famQ_i|$, attained at
+$i_0$, so $\sum_i|\famP_i||\famQ_i|\ge m\mu\ge k\mu$. If the blockade is anticomplete, let
+$\famP:=\bigcup_i\famP_i$, which is pairwise anticomplete because different blocks are anticomplete, and
+let $\famQ$ be a largest $\famQ_i$. If it is complete, let $\famQ:=\bigcup_i\famQ_i$ and $\famP$ a largest
+$\famP_i$. In both cases $|\famP||\famQ|\ge\sum_i|\famP_i||\famQ_i|\ge k\mu$, and
+\[
+|F|\le k^A|B_{i_0}|\le k^A\mu^AT_0\le(|\famP||\famQ|)^AT_0 .
+\]
+
+Apply this to $F=V(G)$: $|G|\le(|\famP||\famQ|)^A\eps^{2A}|G|$ gives $|\famP||\famQ|\ge\eps^{-2}$, so one of the
+families has at least $1/\eps$ members. Suppose it is $\famP$, with $r\ge1/\eps$ members. Choose in each
+member a subset of exactly $\ceil w$ vertices, and let $T$ be their union. Then $|T|=r\ceil w\ge w$, and each
+vertex of $T$ has all its neighbours in $T$ inside its own piece, so it has fewer than $\ceil w=|T|/r\le\eps|T|$
+of them. So $T$ is $\eps$-sparse. If the family is $\famQ$, the same argument in $\Gbar$ shows that $\Gbar[T]$ is
+$\eps$-sparse.
+\end{proof}
+
+\begin{theorem}[polynomial R\"odl property]\label{thm:polyrodl}
+Let $A$ be as in Lemma~\ref{lem:c01a}. For every $\eps\in(0,\frac12)$, every $\cP$-free graph $G$ has an
+$\eps$-restricted induced subgraph with at least $\eps^{3A}|G|$ vertices. The same holds for every $P_6$-free
+graph.
+\end{theorem}
+\begin{proof}
+If some $F$ with $|F|\ge\eps^{2A}|G|$ has an $\eps$-restricted induced subgraph with at least $\eps^A|F|\ge
+\eps^{3A}|G|$ vertices, we are done. Otherwise Lemma~\ref{lem:c01a}, applied with $x=\eps$ to each such $F$,
+gives the hypothesis of Lemma~\ref{lem:c01b}, which gives the claim. The statement for $P_6$-free graphs
+follows by complementation, since the definition of restricted is symmetric.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $G$ be $P_6$-free with $n$ vertices; then $\Gbar$ is $\cP$-free. Let $\tau:=1/((3A+1)(3A+2))$ and
+$u:=n^\tau$. If $u<2$, then either $n\le1$ and $V(G)$ is a clique of size $n\ge u$, or two vertices form a
+clique or a stable set of size $2>u$. Otherwise let $z:=u^{3A+2}=n^{1/(3A+1)}$. Then $z\ge2u\ge4$, so
+$\eps:=1/z<\frac12$. Theorem~\ref{thm:polyrodl} applied to $\Gbar$ gives $T$ with $|T|\ge\eps^{3A}n=z$ that is
+$\eps$-restricted. A graph on $T$ with maximum degree at most $D$ has a stable set of size at least
+$|T|/(D+1)$, by the greedy algorithm. If $\Gbar[T]$ is $\eps$-sparse, it has a stable set, which is a clique
+of $G$, of size at least $|T|/(\eps|T|+1)\ge|T|/(2\eps|T|)=z/2\ge u$, since $\eps|T|\ge1$. If $G[T]$ is
+$\eps$-sparse, the same bound gives a stable set of $G$.
+\end{proof}

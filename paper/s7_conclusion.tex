@@ -1,0 +1,55 @@
+\section{Crux (C) for \texorpdfstring{$\cP$}{co-P6}-free graphs}\label{sec:conclusion}
+
+Nguyen, Scott and Seymour reduce the Erd\H{o}s--Hajnal property to a statement about sparse graphs,
+their ``crux''~\cite[Section 7]{NSS7}. We use the following instance of it, in which the sparsity
+exponent is $2$, the length exponent is $\frac12$ and the threshold is $2^{-16}$.
+
+\begin{definition}[Crux (C) with exponent $a$]\label{def:crux}
+Let $a\ge1$ be an integer. \emph{Crux (C) holds with exponent $a$} if for every $\cP$-free graph $G$ and
+every $y\in(0,2^{-16}]$ such that $G$ is $y$-sparse, one of the following holds:
+\begin{enumerate}[label=(\roman*)]
+\item some $T\subseteq V(G)$ with $|T|\ge y^a|G|$ is $y^2$-sparse;
+\item $G$ has a complete or anticomplete $(y^{-1/2},y^a|G|)$-blockade.
+\end{enumerate}
+\end{definition}
+
+\begin{corollary}\label{cor:crux}
+Let $d$ be the integer of Lemma~\ref{lem:r1blockade} and $\kappa$ the exponent of Theorem~\ref{imp:eh5},
+and put $M':=\ceil{5/\kappa+4}$. Then Crux (C) holds with exponent $a:=M'(10d^2+3)+1$.
+\end{corollary}
+\begin{proof}
+Apply Lemma~\ref{lem:round2step} with the even integer $M:=2M'\ge5/\kappa+4$. Then $A_1=M(10d^2+3)=2k$
+with $k=M'(10d^2+3)$, and Lemma~\ref{lem:round2} gives Crux (C) with exponent $k+1=a$.
+\end{proof}
+
+Section~\ref{sec:c01} shows that Crux (C), together with Theorems~\ref{imp:rodl} and~\ref{imp:path}, implies
+the polynomial R\"odl property and Theorem~\ref{thm:main}. Table~\ref{tab:constants} collects all the
+constants of the proof. Every constant is determined by the constants of the imported theorems. The
+values are those of the Lean proof.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}l X l@{}}
+\toprule
+constant & definition & fixed in \\
+\midrule
+$\delta_1$ & $\delta(2^{-200})$ from R\"odl's theorem (Theorem~\ref{imp:rodl}) & Lemma~\ref{lem:r1blockade}\\
+$L_1$ & an integer with $2^{L_1}\delta_1\ge1$ & Lemma~\ref{lem:r1blockade}\\
+$d$ & $L_1+200$ (so $d\ge200$) & Lemma~\ref{lem:r1blockade}\\
+$\kappa$ & the exponent of Theorem~\ref{imp:eh5}; necessarily $\kappa\le1$ & Theorem~\ref{imp:eh5}\\
+$M'$, $M$ & $M'=\ceil{5/\kappa+4}\ge9$, $M=2M'$ & Corollary~\ref{cor:crux}\\
+$A_1$ & $M(10d^2+3)$ & Lemma~\ref{lem:round2step}\\
+$a$ & $A_1/2+1=M'(10d^2+3)+1$ & Corollary~\ref{cor:crux}\\
+$\delta_2$ & $\delta(2^{-17})$ from R\"odl's theorem & Lemma~\ref{lem:c01a}\\
+$t$ & $t_0+a+1$, where $2^{-17t_0}<\delta_2$ & Lemma~\ref{lem:c01a}\\
+$L_2$ & an integer with $2^{L_2}\cdot360^{-2}\delta_2>2$ & Lemma~\ref{lem:c01a}\\
+$A$ & $2(a+t)+L_2$ & Lemma~\ref{lem:c01a}\\
+$\tau$ & $1/((3A+1)(3A+2))$ & Theorem~\ref{thm:polyrodl}\\
+\bottomrule
+\end{tabularx}
+\caption{The constants. The only unknowns are $\delta_1,\delta_2$ from R\"odl's theorem and $\kappa$ from
+the Erd\H{o}s--Hajnal theorem for $P_5$. Even with the most favourable values, $d\ge200$ and $M'\ge9$ give
+$a\ge3.6\cdot10^6$, $A\ge4a$ and $1/\tau>9A^2>10^{15}$.}
+\label{tab:constants}
+\end{table}

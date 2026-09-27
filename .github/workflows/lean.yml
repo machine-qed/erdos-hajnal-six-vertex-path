@@ -1,0 +1,112 @@
+name: Lean proof
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (downloads the Mathlib cache)
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+
+      - name: No sorry or admit in any proof file
+        working-directory: formal
+        run: |
+          # Challenge.lean is the comparator statement and contains `sorry` by design.
+          if grep -rnwE "sorry|admit" --include=*.lean EHP6 EHP6.lean Audit.lean Solution.lean DefsCheck.lean; then
+            echo "::error::sorry or admit found"; exit 1
+          fi
+
+      - name: Axiom audit (fails on any sorry or unexpected axiom)
+        working-directory: formal
+        run: |
+          lake env lean Audit.lean | tee audit.txt
+          if grep -q sorryAx audit.txt; then echo "::error::sorry found"; exit 1; fi
+          python3 - <<'PY'
+          import re, sys
+          text = open("audit.txt").read()
+          listed = len(re.findall(r"^#print axioms ", open("Audit.lean").read(), re.M))
+          std = {"propext", "Classical.choice", "Quot.sound"}
+          found = {n: {a.strip() for a in s.split(",")}
+                   for n, s in re.findall(r"'([^']+)' depends on axioms: \[(.*?)\]", text, re.S)}
+          found.update({n: set() for n in re.findall(r"'([^']+)' does not depend on any axioms", text)})
+          if len(found) != listed:
+              sys.exit(f"audit printed {len(found)} results, Audit.lean lists {listed}")
+          assumed = std | {"EHP6.rodl_coP6", "EHP6.eh_P5", "EHP6.nss_comb"}
+          for name in ("EHP6.erdos_hajnal_P6_of_imported", "EHP6.erdos_hajnal_P6_of_cited",
+                       "EHP6.nss_path6_proof", "EHP6.erdos_hajnal_P6"):
+              if name not in found:
+                  sys.exit(f"{name} missing from audit")
+          for name, axioms in sorted(found.items()):
+              allowed = assumed if name == "EHP6.erdos_hajnal_P6" else std
+              print(name, sorted(axioms))
+              if not axioms <= allowed:
+                  sys.exit(f"unexpected axioms in {name}: {sorted(axioms - allowed)}")
+          if found["EHP6.erdos_hajnal_P6"] != assumed:
+              sys.exit("EHP6.erdos_hajnal_P6 should use exactly the standard axioms and the three of Axioms.lean")
+          print(f"all {listed} audited results use only the permitted axioms")
+          PY
+
+      - name: Definitions agree with Mathlib's (DefsCheck.lean)
+        working-directory: formal
+        run: |
+          lake env lean DefsCheck.lean 2>&1 | tee defscheck.txt
+          grep -qx "'EHP6.Check.erdos_hajnal_P6_mathlib' depends on axioms: \[propext, Classical.choice, Quot.sound\]" defscheck.txt
+
+      - name: Replay in a fresh kernel environment (leanchecker --fresh)
+        working-directory: formal
+        run: |
+          lake env leanchecker --fresh EHP6.Final 2>&1 | tee leanchecker.txt
+          echo "leanchecker --fresh EHP6.Final: exit 0" >> leanchecker.txt
+
+      # Independent check: comparator (pinned) with the nanoda kernel (pinned). See VERIFICATION.md.
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Build landrun, nanoda, comparator and lean4export
+        run: |
+          set -eux
+          mkdir -p "$RUNNER_TEMP/tools" && cd "$RUNNER_TEMP/tools"
+          git clone -q https://github.com/Zouuup/landrun.git
+          git -C landrun checkout -q 811cfff51ceaf3d9843708aa6d22e9b84ccac8b4
+          (cd landrun && go build -o landrun ./cmd/landrun)
+          git clone -q https://github.com/ammkrn/nanoda_lib.git
+          git -C nanoda_lib checkout -q 3a2407216ee84a75f9e1aead6803d0578be06ae7
+          (cd nanoda_lib && cargo build --release)
+          git clone -q https://github.com/leanprover/comparator.git
+          git -C comparator checkout -q d03acab154d269c06e60e4de7e4cc85deebff94b
+          cp "$GITHUB_WORKSPACE/formal/lean-toolchain" comparator/lean-toolchain
+          (cd comparator && lake build lean4export comparator)
+          test "$(git -C comparator/.lake/packages/lean4export rev-parse HEAD)" = 076e8e57707e813375e8f9da8bf989799ace9680
+
+      - name: Comparator with the Lean kernel and nanoda
+        working-directory: formal
+        run: |
+          T="$RUNNER_TEMP/tools"
+          export PATH="$T/nanoda_lib/target/release:$PATH"
+          export COMPARATOR_LANDRUN="$T/landrun/landrun"
+          export COMPARATOR_LEAN4EXPORT="$T/comparator/.lake/packages/lean4export/.lake/build/bin/lean4export"
+          export COMPARATOR_NANODA="$T/nanoda_lib/target/release/nanoda_bin"
+          lake env "$T/comparator/.lake/build/bin/comparator" comparator.json 2>&1 | tee comparator.txt
+          grep -q "nanoda kernel accepts the solution" comparator.txt
+          grep -q "Lean default kernel accepts the solution" comparator.txt
+          grep -q "Your solution is okay!" comparator.txt
+
+      - name: Keep the check outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-outputs
+          path: |
+            formal/audit.txt
+            formal/defscheck.txt
+            formal/leanchecker.txt
+            formal/comparator.txt

@@ -1,0 +1,111 @@
+\section*{Introduction}
+
+A graph $G$ is \emph{$H$-free} if no induced subgraph of $G$ is isomorphic to $H$. Write $\hom(G)$ for
+the largest size of a clique or a stable set of $G$. Every graph on $n$ vertices has $\hom(G)\ge
+\frac12\log_2 n$, and random graphs show that this is best possible up to the constant. In 1977 Erd\H{o}s
+and Hajnal~\cite{EH77,EH} conjectured that excluding a single induced subgraph changes the picture completely.
+
+\begin{conjecture}
+For every graph $H$ there exists $c>0$ such that every $H$-free graph $G$ satisfies $\hom(G)\ge|G|^{c}$.
+\end{conjecture}
+
+A graph $H$ for which this holds is said to have the \emph{Erd\H{o}s--Hajnal property}. The property is
+known for every graph with at most four vertices and is preserved by substitution~\cite{APS}. The bull
+was settled by Chudnovsky and Safra~\cite{CS}, and the five-cycle by Chudnovsky, Scott, Seymour and
+Spirkl~\cite{C5}. Nguyen, Scott and Seymour proved it for the five-vertex path~\cite{NSS7}, which settled
+every graph on five vertices. Since then it has been proved for a few six-vertex graphs: the E-graph and
+the bird~\cite{HJZ}, and the graph with edges $ab,bc,cd,de,af,bf,df$~\cite{TN}. For paths in general,
+Nguyen, Scott and Seymour~\cite{NSS5} showed that $P_k$-free graphs satisfy $\hom(G)\ge
+2^{(\log|G|)^{1-o(1)}}$, and Bousquet, Lagoutte and Thomass\'e~\cite{BLT} proved a polynomial bound when
+both $P_k$ and its complement are excluded. After $P_5$, the six-vertex path $P_6$ is the smallest path
+for which the conjecture was open.
+
+\begin{theoremL}\label{thm:main}
+There exists $\tau>0$ such that every $P_6$-free graph $G$ satisfies $\hom(G)\ge|G|^{\tau}$.
+\end{theoremL}
+
+A graph is $P_6$-free if and only if its complement is $\cP$-free, and $\hom(G)=\hom(\Gbar)$, so
+Theorem~\ref{thm:main} is equivalent to the Erd\H{o}s--Hajnal property of $\cP$. We work with
+$\cP$-free graphs throughout. We in fact prove the stronger \emph{polynomial R\"odl property}
+(Theorem~\ref{thm:polyrodl}): there is $A$ such that for every $\eps\in(0,\frac12)$, every $\cP$-free
+graph $G$ has an induced subgraph on at least $\eps^{3A}|G|$ vertices whose maximum degree, or whose
+complement's maximum degree, is at most $\eps$ times its number of vertices.
+
+The proof determines $\tau$ by a formula (Table~\ref{tab:constants}) in the constant $\delta$ of R\"odl's
+theorem and the exponent of the Erd\H{o}s--Hajnal theorem for $P_5$. No numerical values of these are
+available, so we cannot give $\tau$ numerically; the formula only shows that $\tau<10^{-15}$.
+
+\subsection*{What is new and what is inherited}
+The proof uses four results from the literature as black boxes: R\"odl's theorem, a blockade theorem of Nguyen,
+Scott and Seymour for sparse graphs without a long induced path, the Erd\H{o}s--Hajnal theorem for
+$P_5$, and the comb lemma of Chudnovsky, Scott, Seymour and Spirkl. The architecture of the proof
+(iterative sparsification organised around combs, niceness and a layout theorem) is that of the proof for
+$P_5$ by Nguyen, Scott and Seymour~\cite{NSS7}. That proof uses the absence of an induced \emph{house},
+the complement of $P_5$, in exactly two places, and both fail for $\cP$-free graphs. The following parts
+are new:
+\begin{itemize}[leftmargin=1.5em]
+\item the three six-vertex certificates: the module law (Lemma~\ref{lem:module}) and the diagonal and
+  house lemmas (Lemmas~\ref{lem:diagonal} and~\ref{lem:house});
+\item the Tooth Lemma (Lemma~\ref{lem:tooth}), which combines the module law with the modular
+  decomposition of a comb's teeth;
+\item the resulting comb lemma for $\cP$ (Lemma~\ref{lem:comb}), whose output blockades are only
+  \emph{semisparse}, and the observation that the layout theorem accepts semisparse input
+  (Theorem~\ref{thm:layout});
+\item the house-free-pattern argument that brings the Erd\H{o}s--Hajnal theorem for $P_5$ into the second
+  sparsification round (Corollary~\ref{cor:housefree} and Lemma~\ref{lem:round2step}).
+\end{itemize}
+The remaining steps, namely the two sparsification rounds and the reduction to the polynomial R\"odl
+property, follow~\cite{NSS7} with the constants recomputed. We prove them in full as well, in the form in
+which they were formalized.
+
+\subsection*{The imported theorems}
+The proof uses the following four theorems and nothing else. Section~\ref{sec:imported} quotes each
+from its source, next to the Lean proposition that renders it. Theorems I, III and IV come from refereed
+papers. Theorem II comes from~\cite{NSS5}, which has not yet appeared in a journal; its proof takes half a
+page, and the formalization proves it, so the formal result assumes only Theorems I, III and IV.
+
+\medskip
+\noindent\begin{tabularx}{\textwidth}{@{}lXl@{}}
+\toprule
+& imported theorem & Lean proposition \\
+\midrule
+I & R\"odl's theorem~\cite{Rodl}, as stated in~\cite[Theorem 1.3]{NSS7}, for $H=\cP$ & \lean{RodlCoP6} \\
+II & sparse graphs without an induced path $P$ contain long anticomplete blockades~\cite[statement 3.1]{NSS5}, for $P=P_6$ & \lean{NssPath6} \\
+III & the Erd\H{o}s--Hajnal property of $P_5$~\cite[Theorem 1.2]{NSS7} & \lean{EhP5} \\
+IV & the comb lemma~\cite[Lemma 4.3]{NSS7}, from~\cite{C5} & \lean{NssComb} \\
+\bottomrule
+\end{tabularx}
+
+\subsection*{Formal verification}
+The whole argument is formalized in Lean~4~\cite{lean4} with Mathlib~\cite{mathlib}. The formal
+theorem \lean{EHP6.erdos\_hajnal\_P6\_of\_imported} states that the four propositions above imply
+Theorem~\ref{thm:main}. Theorem II is proved in the formalization, so Theorems I, III and IV alone imply
+Theorem~\ref{thm:main}; this is the formal theorem \lean{erdos\_hajnal\_P6\_of\_cited}. The proofs of both use no axioms beyond Lean's three standard ones. It was checked with
+Lean~4.34.1, replayed from an empty environment with \lean{leanchecker}, and checked by the comparator
+tool with two kernels, Lean's own and nanoda, an independent type checker written in Rust. The source and
+build instructions are in the repository \repo. Section~\ref{sec:formal} describes the definitions, the
+correspondence between the paper and the Lean files, and how to reproduce the checks. The paper can be
+read without any knowledge of Lean. Independently of this work, Bonnet has formalized in Lean the
+Erd\H{o}s--Hajnal theorems for $C_5$ and $P_5$, including R\"odl's theorem and a version of the comb
+lemma~\cite{Lax54,Lax57}. Connecting these to our formalization would turn Theorems I and III, and,
+after a change of constant, IV into proved statements; we have not done this.
+
+\subsection*{Priority}
+To the best of our knowledge, Theorem~\ref{thm:main} is new. On 27 September 2026 we checked every paper
+indexed by Semantic Scholar that cites~\cite{NSS5}, \cite{NSS7}, \cite{C5} or~\cite{HJZ}, searched arXiv
+and the web, and read the page and discussion of the conjecture on the Erd\H{o}s problems website (Problem
+61), Paul Seymour's list of papers, and the lists of Erd\H{o}s problems resolved with the help of AI. We
+found no proof of the Erd\H{o}s--Hajnal property for $P_6$. The closest recent results are~\cite{HJZ}
+and~\cite{TN}. By the count of Tran and Nguyen~\cite{TN}, eight complementary pairs of prime six-vertex
+graphs were open as of 26 August 2026, and $\{P_6,\cP\}$ is one of them. A public repository by Jared
+Wilder~\cite{Wilder} develops local structure for $P_6$-free graphs towards the same goal and states that
+it does not prove the full result. We did not have access to MathSciNet, zbMATH or Google Scholar, and we
+cannot rule out unpublished work.
+
+\subsection*{Organization}
+The next section explains the idea of the proof and where $\cP$-freeness is used.
+Section~\ref{sec:prelim} fixes notation, states the four imported theorems, and proves the elementary
+tools. Sections~\ref{sec:local}--\ref{sec:comb} contain the new structural part: the local lemmas, the
+Tooth Lemma and the comb lemma. Sections~\ref{sec:round1}--\ref{sec:round2} run the two sparsification
+rounds. Sections~\ref{sec:conclusion} and~\ref{sec:c01} derive Theorem~\ref{thm:main}, and
+Section~\ref{sec:formal} documents the formalization.

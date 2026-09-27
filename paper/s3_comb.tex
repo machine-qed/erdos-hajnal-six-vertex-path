@@ -1,0 +1,78 @@
+\section{The comb lemma for \texorpdfstring{$\cP$}{co-P6}}\label{sec:comb}
+
+This section replaces~\cite[Lemma 5.2]{NSS7}, the step where the proof for $P_5$ uses that the teeth of a
+comb are pure to each other. Lemma~\ref{lem:comb} has the same three outcomes, except that the blockade
+in outcome (ii) is only semisparse.
+
+\begin{lemma}\label{lem:comb}
+Let $0<x\le y\le2^{-64}$, and let $G$ be a $y^3$-sparse $\cP$-free graph with $|G|\ge x^{-18}$. Then one
+of the following holds:
+\begin{enumerate}[label=(\roman*)]
+\item $G$ is $2y^4$-sparse;
+\item for some integer $K$ with $K^{16}\ge1/y$ and $K\le1/x$ there is an $x$-semisparse
+  $(K,|G|/K^{100})$-blockade;
+\item there are disjoint $X,Y$ with $|X|\ge y^4|G|$ and $|Y|\ge(1-4y)|G|$ such that $Y$ is $x$-sparse to $X$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: a comb in a neighbourhood.} This step follows~\cite[Claim 5.2.1]{NSS7}. Assume (i) and
+(iii) fail. Then some vertex $v$ has $|N|\ge2y^4|G|$, where $N:=N(v)$. Note $|G|\ge x^{-18}\ge2/y$. Let
+$A'$ be the set of vertices $w\notin N\cup\{v\}$ with $|N(w)\cap N|\ge\frac12y^2|N|$. Counting edges between
+$A'$ and $N$ and using $y^3$-sparsity, $|A'|\cdot\frac12y^2|N|\le|N|\cdot y^3|G|$, so $|A'|\le2y|G|$. Let
+$A:=V(G)\setminus(N\cup A'\cup\{v\})$. Since $|N|\le y^3|G|$ and $1\le y|G|/2$, we get $|A|\ge(1-3y)|G|$.
+
+Let $N':=\{w\in N:|N(w)\cap A|\le x^2|A|\}$ and $B:=N\setminus N'$. There are at most $x^2|A||N'|$ edges between
+$A$ and $N'$, so at most $x|A|$ vertices of $A$ have more than $x|N'|$ neighbours in $N'$. The remaining
+vertices of $A$, at least $(1-x)|A|\ge(1-4y)|G|$ of them, form a set that is $x$-sparse to $N'$. Since (iii)
+fails, $|N'|<y^4|G|\le|N|/2$, so $|B|\ge|N|/2\ge y^4|G|$. Every vertex of $A$ has fewer than
+$\frac12y^2|N|\le y^2|B|$ neighbours in $B$, and every vertex of $B$ has more than $x^2|A|$ neighbours in $A$.
+
+By Lemma~\ref{lem:locate} (with $x^2$ in place of $x$) there is $S\subseteq A$ with $|S|\le x^{-2}$ such that at
+least $|B|/2$ vertices of $B$ have a neighbour in $S$. Apply Theorem~\ref{imp:comb} to $(S,B)$ with
+$\Delta:=y^2|B|$. Since $|B|/2>20y|B|=20\sqrt{|B|\Delta}$, its first outcome fails, so there is an
+$(\ell,|B|/\ell^2)$-comb $((a_i,B_i):i\in[\ell])$ with $a_i\in S$ and $B_i\subseteq B$. From $|B|/\ell^2\le
+|B_i|\le|N(a_i)\cap B|\le y^2|B|$ we get $\ell\ge1/y\ge2^{64}$, and since the $a_i$ are distinct elements of
+$S$, $\ell\le x^{-2}$. Each tooth satisfies $|B_i|\ge|B|/\ell^2\ge y^4|G|/\ell^2$.
+
+\emph{Step 2: the Tooth Lemma on every tooth.} Let $k$ be the least integer with $k^4\ge\ell$. Then
+$(k-1)^4<\ell$, so $2^{16}\le k\le\ell$ and $k-1<\ell^{1/4}\le x^{-1/2}$, whence $k\le2x^{-1/2}$. This also
+gives $k^2x\le4$ and $kx\le1$. Keep the teeth $B_1,\dots,B_k$ and put $n_i:=|B_i|$. Since $y\ge x$ and
+$\ell\le x^{-2}$,
+\[
+n_i\ge\frac{y^4|G|}{\ell^2}\ge x^8|G|\ge x^{-10}\ge16x^{-3},
+\qquad\text{and since }y\ge1/\ell,\ \ell\le k^4:\qquad n_i\ge\frac{|G|}{\ell^6}\ge\frac{|G|}{k^{24}}.
+\]
+Fix $i\in[k]$ and let $U_i:=\bigcup_{j\in[k]\setminus\{i\}}B_j$. For $u\in U_i$ we have $v\not\sim a_i$ (as
+$a_i\in A$), $B_i\subseteq N(v)\cap N(a_i)$, $u\sim v$ (as $u\in N$), and $u\not\sim a_i$ (by the comb). By the
+module law (Lemma~\ref{lem:module}) with $Z=B_i$, every anticomponent of $N(u)\cap B_i$ is a module of
+$G[B_i]$. So the Tooth Lemma (Lemma~\ref{lem:tooth}) applies to $(Y,U)=(B_i,U_i)$ with this $k$; its
+hypotheses $x\le2^{-20}$, $2^{16}\le k\le2x^{-1/2}$ and $n_i\ge16x^{-3}$ hold.
+
+\emph{Step 3: one tooth gives (TL1)--(TL4).} A pure or complete blockade is $x$-semisparse, and an
+anticomplete pair is weakly $x$-sparse. We check that the blockade has the length and width required
+in (ii).
+\begin{itemize}[leftmargin=1.5em]
+\item (TL1): $K^4\ge k$ and $K\le1/x$. Then $K^{16}\ge k^4\ge\ell\ge1/y$, and the width is $n_i/K^4\ge
+  |G|/(k^{24}K^4)\ge|G|/K^{100}$ because $k^{24}\le K^{96}$.
+\item (TL2): $(8L)^4\le k^3\le(9L)^4$. Then $L\ge k^{3/4}/9$, so $L^{16}\ge k^{12}/9^{16}\ge k^4\ge1/y$, and
+  $L\le k\le1/x$. The width is $n_i/(2k)\ge|G|/(2k^{25})\ge|G|/L^{100}$, because $L^{100}\ge k^{75}/9^{100}\ge
+  2k^{25}$ for $k\ge2^{16}$.
+\item (TL3): $K=\floor{1/x}\in[1/(2x),1/x]$. Then $K^{16}\ge(2y)^{-16}\ge1/y$, and the width is $x^2n_i/k\ge
+  x^{11}|G|\ge(2x)^{100}|G|\ge|G|/K^{100}$, using $1/k\ge x$ and $n_i\ge x^8|G|$.
+\item (TL4): $K=\floor{1/(xk)}\ge1/(2xk)\ge x^{-1/2}/4$, and $K\le1/x$. Then $K^{16}\ge x^{-8}/4^{16}\ge1/y$, and
+  the width is $x^3n_i/4\ge x^{11}|G|/4\ge|G|/K^{100}$.
+\end{itemize}
+In each case (ii) holds.
+
+\emph{Step 4: every tooth gives (TL5).} Then for each $i$ there is $Y'_i\subseteq B_i$ with $|Y'_i|\ge
+n_i/k\ge|G|/k^{25}$ such that every $u\in U_i$ satisfies $Y'_i\subseteq N(u)$ or $|N(u)\cap Y'_i|<\frac x4|Y'_i|$.
+For $i\ne j$, every vertex of $Y'_i$ lies in $U_j$ and vice versa, so the Pair Lemma
+(Lemma~\ref{lem:pair}) with $\theta=x/4$ shows that $(Y'_i,Y'_j)$ is complete or weakly $\frac x2$-sparse.
+Hence $(Y'_1,\dots,Y'_k)$ is an $x$-semisparse $(k,|G|/k^{100})$-blockade, with $k^{16}\ge k^4\ge\ell\ge1/y$ and
+$k\le1/x$. This is (ii).
+\end{proof}
+
+The comb lemma is the only place where the Tooth Lemma is used, and Step 4 is the reason the blockades
+of round one are semisparse rather than pure: two sets $Y'_i,Y'_j$ can be sparse to each other on average
+while a few vertices of $Y'_i$ are complete to $Y'_j$.
