@@ -283,6 +283,11 @@ Proc. London Math. Soc. 132 (2026), e70133; [arXiv:2312.15333](https://arxiv.org
 [CSSS] M. Chudnovsky, A. Scott, P. Seymour, S. Spirkl, *Erdős–Hajnal for graphs with no 5-hole*,
 Proc. London Math. Soc. 126 (2023), 997–1014.
 
+## Citing
+
+Use the "Cite this repository" button on GitHub (generated from [CITATION.cff](CITATION.cff)), and give
+the version: `v1.0-proof` is the tagged release described in [RELEASE.md](RELEASE.md).
+
 ## License
 
 The Lean code in [formal/](formal/) is released under the [Apache License 2.0](LICENSE), the license of

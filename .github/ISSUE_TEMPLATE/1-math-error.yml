@@ -1,0 +1,28 @@
+name: Mathematical error
+description: A gap, a wrong step or an unclear argument in the paper.
+title: "[Math] "
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Where
+      description: Section, lemma or equation in paper/erdos-hajnal-p6.pdf.
+      placeholder: "Lemma 2.1, Claim 3"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong
+      description: The step that fails, and why. A counterexample helps if you have one.
+    validations:
+      required: true
+  - type: textarea
+    id: lean
+    attributes:
+      label: Does the Lean proof cover this step?
+      description: >-
+        formal/README.md maps each result of the paper to its Lean proof. If the formalization proves
+        the step, the problem may be in the exposition rather than the mathematics.
+    validations:
+      required: false

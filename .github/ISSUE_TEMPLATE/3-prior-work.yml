@@ -1,0 +1,18 @@
+name: Earlier or related work
+description: A paper, preprint or talk that already proves this result or overlaps with it.
+title: "[Prior work] "
+body:
+  - type: input
+    id: reference
+    attributes:
+      label: Reference
+      description: Authors, title, and a link (arXiv, journal, slides).
+    validations:
+      required: true
+  - type: textarea
+    id: relation
+    attributes:
+      label: How it relates
+      description: Does it prove the Erdős–Hajnal property for P6, a stronger or weaker statement, or use related methods?
+    validations:
+      required: true

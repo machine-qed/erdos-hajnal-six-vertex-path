@@ -1,0 +1,30 @@
+name: Formalization problem
+description: A statement that does not match its source, a definition that is wrong, or a failing check.
+title: "[Lean] "
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of problem
+      options:
+        - A cited statement in Imported.lean does not match its source
+        - A definition in Defs.lean does not mean what it should
+        - The build or one of the checks fails
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: File and declaration, what you expected, and what you found.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Commands you ran and their output, with your Lean and Mathlib versions if they differ from formal/lean-toolchain.
+      render: text
+    validations:
+      required: false

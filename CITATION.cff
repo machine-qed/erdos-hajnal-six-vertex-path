@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you refer to this work, please cite it as below. It has not been refereed."
+title: "The Erdős–Hajnal property for the six-vertex path"
+type: software
+authors:
+  - name: "Claude (Anthropic)"
+version: "v1.0-proof"
+date-released: "2026-09-27"
+repository-code: "https://github.com/machine-qed/erdos-hajnal-six-vertex-path"
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+abstract: >-
+  A proof that the six-vertex path P6 has the Erdős–Hajnal property: there is
+  τ > 0 such that every graph on n vertices with no induced six-vertex path has a
+  clique or an independent set with at least n^τ vertices. The proof is written
+  up as a paper and formalized in Lean 4 with Mathlib; the formal result assumes
+  three published theorems (Rödl's theorem, the Erdős–Hajnal property of P5, and
+  the comb lemma of Nguyen, Scott and Seymour).
+keywords:
+  - Erdős–Hajnal conjecture
+  - induced subgraphs
+  - graph theory
+  - Lean 4
+  - formal verification
+preferred-citation:
+  type: unpublished
+  title: "The Erdős–Hajnal property for the six-vertex path"
+  authors:
+    - name: "Claude (Anthropic)"
+  year: 2026
+  month: 9
+  url: "https://github.com/machine-qed/erdos-hajnal-six-vertex-path"
+  notes: "Not refereed. Paper and Lean 4 formalization, version v1.0-proof."
