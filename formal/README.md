@@ -92,7 +92,9 @@ with all theorem names. The last column lists the imported theorems a result dep
 The paper gives every proof in the form in which it was formalized. In a few places this differs from
 the corresponding argument in NSS VII:
 
-- NSS VII Lemmas 4.1 and 4.2 are proved here by greedy arguments; the second replaces a random choice.
+- NSS VII Lemmas 4.1 and 4.2 are proved here by greedy arguments; the second replaces the random choice of
+  arXiv version 3 and keeps its bound |A'| ≤ 1/x (for x < 1/2). The July 2026 revision of NSS VII also
+  uses a greedy argument, with the bound 2/x for all x > 0.
 - Steps 2 and 3 of Lemma 6.1 use a deterministic averaging pass instead of random subsets.
 - Lemmas 4.2 and 8.1 take the largest admissible index on a discrete sequence of scales instead of the
   least admissible real y.
@@ -101,7 +103,7 @@ the corresponding argument in NSS VII:
 
 ## A bug the formalization caught
 
-An early version assumed NSS VII Lemma 4.2 as an axiom, in the published form: if every vertex of B has
+An early version assumed NSS VII Lemma 4.2 as an axiom, in the form of arXiv version 3: if every vertex of B has
 at least x|A| neighbours in A, then some A' ⊆ A with |A'| ≤ 1/x covers half of B. For A = ∅ and B ≠ ∅
 the hypothesis holds vacuously and the conclusion fails, so the axiom was false. The degenerate case is
 harmless in the paper, but a false axiom makes a formalization worthless. The hypothesis A ≠ ∅ was added,

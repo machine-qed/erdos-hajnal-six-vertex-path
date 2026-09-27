@@ -12,7 +12,8 @@ Erdős–Hajnal property for P6. `git rev-list -n 1 v1.0-proof` shows the commit
 | Lean | `leanprover/lean4:v4.34.1` (`formal/lean-toolchain`) |
 | Mathlib | tag `v4.34.1`, commit `d13f23b723b8a846827a245b89c10fc7d3f11612` (`formal/lake-manifest.json`) |
 | independent checks | `leanchecker --fresh`; comparator `v4.34.0` with the Lean kernel and nanoda; see `VERIFICATION.md` |
-| checksums | `SHA256SUMS` (SHA-256 of the PDF and of every Lean and build file) |
+| checksums | `SHA256SUMS` (SHA-256 of every file in the repository except `SHA256SUMS` itself) |
+| check outputs | `audit.txt`, `defscheck.txt`, `leanchecker.txt` and `comparator.txt` from the CI run on the release commit, attached to the GitHub release |
 
 To verify a copy of the release:
 

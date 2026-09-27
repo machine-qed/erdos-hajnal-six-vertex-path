@@ -112,9 +112,11 @@ The disjointness of the apexes from the teeth follows from $A\cap B=\emptyset$.
 
 \subsection{Two elementary lemmas of Nguyen, Scott and Seymour}
 The proof also uses Lemmas 4.1 and 4.2 of~\cite{NSS7}. We prove both, since they are short and are
-proved in the formalization. The statement of~\cite[Lemma 4.2]{NSS7} needs the hypothesis $A\ne\emptyset$:
-for $A=\emptyset\ne B$ its hypothesis holds vacuously but its conclusion fails. This does not affect any
-use of it, here or in~\cite{NSS7}.
+proved in the formalization. Lemma~\ref{lem:locate} is~\cite[Lemma 4.2]{NSS7} in the form of arXiv version~3
+(February 2026), with the added hypothesis $A\ne\emptyset$: for $A=\emptyset\ne B$ the hypothesis holds
+vacuously but the conclusion fails. This does not affect any use of it, here or in~\cite{NSS7}. The
+revision of~\cite{NSS7} dated July 2026 states the lemma for all $x>0$ with the weaker bound
+$|A'|\le2/x$; since we prove Lemma~\ref{lem:locate} below, nothing here depends on which version is used.
 
 \begin{lemma}[{\cite[Lemma 4.1]{NSS7}}]\label{lem:cores}
 Let $k\ge2$ be an integer and let $G$ be a graph all of whose anticomponents have fewer than $|G|/k$
@@ -135,7 +137,7 @@ $(k,n/k^2)$-blockade.
 Applied to $\Gbar$: if every component of $G$ has fewer than $|G|/k$ vertices, then $G$ has an
 anticomplete $(k,|G|/k^2)$-blockade.
 
-\begin{lemma}[{\cite[Lemma 4.2]{NSS7}}]\label{lem:locate}
+\begin{lemma}[{cf.~\cite[Lemma 4.2]{NSS7}}]\label{lem:locate}
 Let $x\in(0,\frac12)$, let $A\ne\emptyset$ and $B$ be sets of vertices, and suppose every vertex of $B$ has
 at least $x|A|$ neighbours in $A$. Then there is $A'\subseteq A$ with $|A'|\le1/x$ such that at least
 $|B|/2$ vertices of $B$ have a neighbour in $A'$.

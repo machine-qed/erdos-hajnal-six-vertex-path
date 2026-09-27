@@ -23,7 +23,8 @@ theorem `EHP6.erdos_hajnal_P6 : EHforP6` applies the second to the three axioms 
 
 All checks were run on Lean `v4.34.1` with Mathlib `v4.34.1`. They run again in GitHub Actions on every
 push ([`.github/workflows/lean.yml`](.github/workflows/lean.yml)), with every tool pinned to the commit
-given below, and the outputs are kept as build artifacts.
+given below. The outputs of each run are kept as build artifacts, which GitHub deletes after 90 days;
+the outputs of the run on the release commit are also attached to the GitHub release `v1.0-proof`.
 
 **1. Build and axiom audit.** `lake build` elaborates every file and sends every declaration to Lean's
 kernel. `Audit.lean` then prints the axioms used by the three main theorems and by 32 intermediate

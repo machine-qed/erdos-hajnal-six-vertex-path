@@ -9,13 +9,15 @@ uses no axioms beyond Lean's standard ones, so Lean checks the implication
 
   `RodlCoP6 → NssPath6 → EhP5 → NssComb → EHforP6`
 
-outright. `EHP6/Axioms.lean` then asserts the four propositions, citing the literature, to obtain the
+outright. `NssPath6` is proved in `EHP6/NSSPath.lean`, so `EHP6.erdos_hajnal_P6_of_cited` needs only
+the other three, and `EHP6/Axioms.lean` asserts those three, citing the literature, to obtain the
 unconditional statement `EHP6.erdos_hajnal_P6 : EHforP6`.
 
 Each proposition is stated as close as possible to its source; each is an instance or a
 vertex-set-relative restatement of the cited statement (a statement about `G[S]` for every `S` is
 equivalent to the statement for every graph, since induced subgraphs of H-free graphs are H-free).
-**These statements must be checked by a human against the sources.**
+**`RodlCoP6`, `EhP5` and `NssComb` must be checked by a human against the sources;** `NssPath6` is
+proved, so its statement does not need that check.
 
 * `RodlCoP6` — Rödl (1986), as stated in NSS VII (arXiv 2312.15333) Theorem 1.3, for H = P̄6.
 * `NssPath6` — Nguyen–Scott–Seymour, *Induced subgraph density V* (arXiv 2307.15032, a preprint),
