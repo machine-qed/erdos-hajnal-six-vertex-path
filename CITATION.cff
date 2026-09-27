@@ -3,7 +3,7 @@ message: "If you refer to this work, please cite it as below. It has not been re
 title: "The Erdős–Hajnal property for the six-vertex path"
 type: software
 authors:
-  - name: "Claude (Anthropic)"
+  - name: "machine-qed"
 version: "v1.0-proof"
 date-released: "2026-09-27"
 repository-code: "https://github.com/machine-qed/erdos-hajnal-six-vertex-path"
@@ -27,7 +27,7 @@ preferred-citation:
   type: unpublished
   title: "The Erdős–Hajnal property for the six-vertex path"
   authors:
-    - name: "Claude (Anthropic)"
+    - name: "machine-qed"
   year: 2026
   month: 9
   url: "https://github.com/machine-qed/erdos-hajnal-six-vertex-path"

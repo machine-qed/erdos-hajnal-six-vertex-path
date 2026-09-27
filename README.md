@@ -3,10 +3,8 @@
 [![Lean proof](https://github.com/machine-qed/erdos-hajnal-six-vertex-path/actions/workflows/lean.yml/badge.svg)](https://github.com/machine-qed/erdos-hajnal-six-vertex-path/actions/workflows/lean.yml)
 
 This repository contains a proof that the six-vertex path P6 has the Erdős–Hajnal property, written up as
-a paper and formalized in Lean 4. The proof has **not been refereed**. It was produced by Claude Opus 5.5, an AI
-system made by Anthropic, in a research session commissioned by the repository owner. It is not a
-publication of Anthropic, and Anthropic has not reviewed it. If you find a problem, please
-[open an issue](../../issues).
+a paper and formalized in Lean 4. It was produced by Claude Opus 5.5 (Anthropic) and has **not been
+refereed**. If you find a problem, please [open an issue](../../issues).
 
 ## The result
 
